@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>JEVJ1K — видеомонтажёр и motion-дизайнер</title>
+  <meta name="description" content="Портфолио начинающего видеомонтажёра JEVJ1K: эдиты, визуальные эффекты и анимации в Adobe Premiere Pro и After Effects. Смотри работы и пиши в Telegram.">
+  <meta name="theme-color" content="#0B0C1A">
+  <meta name="color-scheme" content="dark">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="JEVJ1K — монтаж видео, который цепляет">
+  <meta property="og:description" content="Динамичные эдиты, атмосферные видеоролики и анимации. Premiere Pro и After Effects.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Unbounded:wght@500;600;700&display=swap">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%239378FF'/%3E%3Cpath d='M12 9l11 7-11 7z' fill='%230B0C1A'/%3E%3C/svg%3E">
+  <script>document.documentElement.classList.add('js');</script>
+
+  <style>
+    /* ============================================================
+       Токены. Чтобы сменить акцентный цвет, поменяй --accent.
+       ============================================================ */
+    :root {
+      --bg: #0B0C1A;
+      --surface: #131530;
+      --surface-2: #1B1E3F;
+      --line: rgba(238, 235, 246, 0.13);
+      --text: #EEEBF6;
+      --muted: #ABA5BF;
+      --accent: #9378FF;
+      --accent-soft: rgba(147, 120, 255, 0.16);
+      /* Синие оттенки: дополняют фиолетовый, не заменяют его */
+      --blue: #5B8CFF;
+      --blue-deep: #2F4BDB;
+      --sky: #58C7FF;
+      --blue-soft: rgba(91, 140, 255, 0.16);
+      --on-accent: #0B0C1A;
+
+      --font: "Manrope", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+      --display: "Unbounded", "Manrope", "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
+      --mono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+
+      --header-h: 4rem;
+      --radius: 14px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html {
+      scroll-padding-top: calc(var(--header-h) + 1rem);
+      -webkit-text-size-adjust: 100%;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      html { scroll-behavior: smooth; }
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--font);
+      font-size: 1rem;
+      line-height: 1.6;
+      color: var(--text);
+      background: var(--bg);
+      overflow-x: hidden;
+    }
+
+    img, video, svg { max-width: 100%; display: block; }
+    h1, h2, h3, p { margin: 0; overflow-wrap: break-word; }
+    ul { margin: 0; padding: 0; list-style: none; }
+    a { color: inherit; }
+
+    ::selection { background: var(--blue); color: var(--on-accent); }
+
+    :focus-visible {
+      outline: 3px solid var(--sky);
+      outline-offset: 3px;
+      border-radius: 4px;
+    }
+
+    .wrap { width: min(100% - 2.5rem, 76rem); margin-inline: auto; }
+
+    .skip-link {
+      position: absolute; left: 1rem; top: -4rem; z-index: 100;
+      padding: .75rem 1rem; background: var(--accent); color: var(--on-accent);
+      font-weight: 700; border-radius: 8px; text-decoration: none;
+    }
+    .skip-link:focus { top: 1rem; }
+
+    /* ---------- Кнопки ---------- */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-height: 3rem; padding: .7rem 1.5rem;
+      font: inherit; font-weight: 700; text-decoration: none; text-align: center;
+      border: 1.5px solid transparent; border-radius: 999px; cursor: pointer;
+      transition: background-color .2s, color .2s, border-color .2s, transform .2s;
+    }
+    .btn--primary { background: linear-gradient(135deg, #9378FF 0%, #5B8CFF 100%); color: var(--on-accent); }
+    .btn--primary:hover { background: linear-gradient(135deg, #A892FF 0%, #7CA4FF 100%); }
+    .btn--ghost { border-color: var(--line); color: var(--text); background: transparent; }
+    .btn--ghost:hover { border-color: var(--blue); background: var(--blue-soft); }
+    .btn--lg { min-height: 3.5rem; padding-inline: 2.25rem; font-size: 1.125rem; }
+    .btn:active { transform: translateY(1px); }
+
+    /* ---------- Header ---------- */
+    .site-header {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(11, 12, 26, 0.94);
+      border-bottom: 1px solid var(--line);
+    }
+    @supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+      .site-header {
+        background: rgba(11, 12, 26, 0.68);
+        -webkit-backdrop-filter: blur(16px) saturate(1.4);
+        backdrop-filter: blur(16px) saturate(1.4);
+      }
+    }
+    .site-header__inner {
+      display: flex; align-items: center; justify-content: space-between;
+      min-height: var(--header-h); gap: 1rem;
+    }
+    .logo {
+      display: inline-flex; align-items: center; gap: .5rem;
+      min-height: 2.75rem;
+      font-family: var(--display); font-weight: 700; font-size: 1.05rem; letter-spacing: .02em; text-decoration: none;
+    }
+    .logo::after {
+      content: ""; width: .5rem; height: .5rem; border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--blue));
+    }
+
+    .nav-toggle {
+      display: none; align-items: center; justify-content: center;
+      width: 2.75rem; height: 2.75rem; padding: 0;
+      background: transparent; color: var(--text);
+      border: 1px solid var(--line); border-radius: 12px; cursor: pointer;
+    }
+    .nav-toggle__bars, .nav-toggle__bars::before, .nav-toggle__bars::after {
+      display: block; width: 1.15rem; height: 2px; background: currentColor;
+      border-radius: 2px; transition: transform .2s, opacity .2s;
+    }
+    .nav-toggle__bars { position: relative; }
+    .nav-toggle__bars::before, .nav-toggle__bars::after { content: ""; position: absolute; left: 0; }
+    .nav-toggle__bars::before { top: -6px; }
+    .nav-toggle__bars::after { top: 6px; }
+    .nav-toggle[aria-expanded="true"] .nav-toggle__bars { background: transparent; }
+    .nav-toggle[aria-expanded="true"] .nav-toggle__bars::before { transform: translateY(6px) rotate(45deg); }
+    .nav-toggle[aria-expanded="true"] .nav-toggle__bars::after { transform: translateY(-6px) rotate(-45deg); }
+
+    .nav { display: flex; align-items: center; gap: 1.5rem; }
+    .nav__list { display: flex; align-items: center; gap: .25rem; }
+    .nav__link {
+      display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0 .75rem;
+      color: var(--muted); font-size: .95rem; font-weight: 500; text-decoration: none;
+      border-radius: 8px; transition: color .2s;
+    }
+    .nav__link:hover { color: var(--sky); }
+    .nav__cta { min-height: 2.5rem; padding: .4rem 1.1rem; font-size: .95rem; }
+
+    @media (max-width: 47.99rem) {
+      .js .nav-toggle { display: inline-flex; }
+      .js .nav {
+        display: none; position: absolute; left: 0; right: 0; top: 100%;
+        flex-direction: column; align-items: stretch; gap: 1rem;
+        padding: 1rem 1.25rem 1.5rem;
+        background: var(--bg); border-bottom: 1px solid var(--line);
+      }
+      .js .site-header.is-open .nav { display: flex; }
+      .js .nav__list { flex-direction: column; align-items: stretch; }
+      .js .nav__link { min-height: 3rem; font-size: 1.05rem; border-bottom: 1px solid var(--line); border-radius: 0; }
+      .js .nav__cta { min-height: 3rem; }
+      .nav { flex-wrap: wrap; gap: .5rem 1rem; }
+      .nav__list { flex-wrap: wrap; }
+    }
+
+    /* ---------- Общие стили секций ---------- */
+    .section { padding-block: clamp(4rem, 9vw, 7.5rem); }
+    .section__title {
+      font-family: var(--display);
+      font-size: clamp(1.6rem, 4.4vw, 2.9rem);
+      line-height: 1.12; letter-spacing: -0.02em; font-weight: 700;
+      text-wrap: balance;
+    }
+    .section__lead { margin-top: 1rem; max-width: 40rem; color: var(--muted); font-size: 1.05rem; }
+
+    /* ---------- Hero ---------- */
+    .hero {
+      position: relative; overflow: hidden;
+      padding-block: clamp(3rem, 8vw, 6rem) clamp(3rem, 7vw, 5rem);
+    }
+    .hero::before {
+      content: ""; position: absolute; z-index: 0;
+      width: min(60rem, 140vw); aspect-ratio: 1; right: -20%; top: -35%;
+      background: radial-gradient(closest-side, rgba(147, 120, 255, 0.22), rgba(147, 120, 255, 0));
+      pointer-events: none;
+    }
+    .hero::after {
+      content: ""; position: absolute; z-index: 0;
+      width: min(62rem, 150vw); aspect-ratio: 1; left: -30%; bottom: -35%;
+      background: radial-gradient(closest-side, rgba(47, 75, 219, 0.45), rgba(47, 75, 219, 0));
+      pointer-events: none;
+    }
+    .hero .wrap { position: relative; z-index: 1; }
+
+    .badge {
+      display: inline-flex; align-items: center; gap: .6rem;
+      padding: .4rem .9rem; margin-bottom: 1.5rem;
+      font-family: var(--mono); font-size: .85rem; color: var(--text);
+      border: 1px solid rgba(91, 140, 255, .45); border-radius: 999px; background: var(--blue-soft);
+    }
+    .badge__dot { width: .55rem; height: .55rem; border-radius: 50%; background: var(--sky); }
+    @media (prefers-reduced-motion: no-preference) {
+      .badge__dot { animation: rec 1.6s steps(1, end) infinite; }
+      @keyframes rec { 50% { opacity: .2; } }
+    }
+
+    .hero__title {
+      max-width: 16ch;
+      font-family: var(--display);
+      font-size: clamp(1.9rem, 7.4vw, 5.25rem);
+      line-height: 1.05; letter-spacing: -0.03em; font-weight: 700;
+      text-wrap: balance;
+    }
+    .hero__text {
+      margin-top: 1.5rem; max-width: 36rem;
+      font-size: clamp(1.05rem, 2.4vw, 1.3rem); color: var(--muted);
+    }
+    .hero__actions { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 2rem; }
+
+    /* Имитация таймлайна. Чисто декоративный блок. */
+    .timeline {
+      margin-top: clamp(2.5rem, 7vw, 4.5rem);
+      padding: 1.9rem 1rem 1rem; border: 1px solid var(--line); border-radius: 18px;
+      background: var(--surface);
+    }
+    .tl__body { position: relative; }
+    .tl__row { display: grid; grid-template-columns: 2.5rem 1fr; align-items: center; }
+    .tl__tracks { display: flex; flex-direction: column; gap: .4rem; margin-top: .6rem; }
+    .tl__label { font-family: var(--mono); font-size: .75rem; color: var(--muted); }
+    .tl__ruler {
+      display: flex; justify-content: space-between;
+      font-family: var(--mono); font-size: .72rem; color: var(--muted);
+      padding-bottom: .45rem; border-bottom: 1px solid var(--line);
+    }
+    .tl__ruler span:nth-child(even) { display: none; }
+    .tl__lane {
+      position: relative; height: 2.1rem; border-radius: 6px;
+      background: rgba(238, 235, 246, 0.04);
+    }
+    .clip {
+      position: absolute; top: 0; bottom: 0; left: var(--l); width: var(--w);
+      border-radius: 6px; border: 1px solid var(--bg);
+    }
+    .clip--video { background: linear-gradient(90deg, #2F43A8, #26357F); }
+    .clip--accent { background: var(--accent); }
+    .clip--text { background: #3447C9; }
+    .clip--audio {
+      background:
+        repeating-linear-gradient(90deg, rgba(91, 140, 255, .9) 0 2px, transparent 2px 6px) center / 100% 55% no-repeat,
+        #1A2152;
+    }
+    .tl__scrub { position: absolute; top: 0; bottom: 0; left: 2.5rem; right: 0; pointer-events: none; }
+    .tl__playhead {
+      position: absolute; top: 0; bottom: 0; left: 62%;
+      width: 2px; background: var(--sky);
+    }
+    .tl__flag {
+      position: absolute; top: -1.45rem; left: 50%; transform: translateX(-50%);
+      padding: .1rem .4rem; border-radius: 4px;
+      font-family: var(--mono); font-size: .7rem; font-weight: 700; white-space: nowrap;
+      background: var(--sky); color: var(--on-accent);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      /* Единственная «постановочная» анимация на странице: плейхед проходит таймлайн один раз. */
+      .tl__playhead { animation: scrub 2.8s cubic-bezier(.5, 0, .2, 1) .3s both; }
+      @keyframes scrub { from { left: 0; } to { left: 62%; } }
+    }
+    @media (min-width: 40rem) {
+      .tl__ruler span:nth-child(even) { display: inline; }
+      .tl__lane { height: 2.5rem; }
+      .timeline { padding: 2.4rem 1.5rem 1.5rem; }
+    }
+
+    /* ---------- Обо мне ---------- */
+    .about__grid { display: grid; gap: 2.5rem; }
+    .about__text { margin-top: 1.5rem; max-width: 38rem; font-size: 1.1rem; color: var(--muted); }
+    .about__text + .btn { margin-top: 2rem; }
+    .tools { display: grid; gap: 1rem; }
+    .tool {
+      padding: 1.25rem 1.5rem; border: 1px solid var(--line); border-left: 4px solid var(--accent);
+      border-radius: var(--radius); background: var(--surface);
+    }
+    .tool:nth-child(2) { border-left-color: var(--blue); }
+    .tool__name { font-family: var(--display); font-size: 1.2rem; font-weight: 600; letter-spacing: -0.01em; }
+    .tool__desc { margin-top: .25rem; color: var(--muted); }
+    .chips { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1.25rem; }
+    .chip {
+      padding: .45rem 1rem; border: 1px solid rgba(91, 140, 255, .4); border-radius: 999px;
+      font-size: .95rem; color: var(--text); background: var(--blue-soft);
+    }
+    @media (min-width: 64rem) {
+      .about__grid { grid-template-columns: 1.15fr 1fr; gap: 5rem; align-items: start; }
+    }
+
+    /* ---------- Услуги ---------- */
+    .services__grid {
+      display: grid; grid-template-columns: 1fr; gap: 1px;
+      margin-top: clamp(2rem, 5vw, 3.5rem);
+      background: var(--line);
+      border: 1px solid var(--line); border-radius: 18px; overflow: hidden;
+    }
+    .service {
+      padding: 1.75rem 1.5rem; background: var(--bg);
+      transition: background-color .25s;
+    }
+    .service:hover { background: var(--surface); }
+    .service__icon { width: 1.75rem; height: 1.75rem; color: var(--blue); transition: color .25s; }
+    .service:hover .service__icon { color: var(--accent); }
+    .service__title { margin-top: 1.1rem; font-family: var(--display); font-size: .95rem; font-weight: 600; line-height: 1.35; }
+    .service__desc { margin-top: .4rem; color: var(--muted); font-size: .95rem; line-height: 1.5; }
+    @media (min-width: 40rem) { .services__grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width: 64rem) { .services__grid { grid-template-columns: repeat(4, 1fr); } }
+
+    /* ---------- Работы (карусель) ---------- */
+    .works__head { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 1.5rem; }
+    .works__bar {
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem;
+      margin-top: clamp(1.5rem, 4vw, 2.5rem);
+    }
+    .filters { display: flex; flex-wrap: wrap; gap: .5rem; }
+    .filter {
+      min-height: 2.75rem; padding: .4rem 1.1rem; font: inherit; font-weight: 600; font-size: .95rem;
+      color: var(--muted); background: transparent; border: 1px solid var(--line); border-radius: 999px; cursor: pointer;
+      transition: color .2s, border-color .2s, background-color .2s;
+    }
+    .filter:hover { color: var(--text); border-color: var(--blue); }
+    .filter[aria-pressed="true"] { color: var(--on-accent); background: var(--blue); border-color: var(--blue); }
+    .arrows { display: flex; gap: .6rem; }
+    @media (max-width: 39.99rem) { .arrows { display: none; } }
+    .arrow {
+      display: grid; place-items: center; width: 3rem; height: 3rem; padding: 0; cursor: pointer;
+      color: var(--text); background: var(--blue-soft); border: 1px solid rgba(91, 140, 255, .55); border-radius: 50%;
+      transition: background-color .2s, color .2s, opacity .2s;
+    }
+    .arrow:hover:not(:disabled) { background: var(--blue); color: var(--on-accent); }
+    .arrow:disabled { opacity: .35; cursor: default; }
+    .arrow svg { width: 1.2rem; height: 1.2rem; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+    .carousel { margin-top: 1.25rem; }
+    .carousel__track {
+      --edge: max(1.25rem, calc((100% - 76rem) / 2));
+      display: flex; gap: 1.25rem; overflow-x: auto; overscroll-behavior-x: contain;
+      padding: .5rem var(--edge) 1.5rem; scroll-padding-inline: var(--edge);
+      scroll-snap-type: x mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch;
+    }
+    .carousel__track::-webkit-scrollbar { display: none; }
+    .carousel__progress { height: 3px; margin-inline: var(--edge-m, max(1.25rem, calc((100% - 76rem) / 2))); border-radius: 2px; background: var(--line); overflow: hidden; }
+    .carousel__bar { display: block; height: 100%; width: 0; border-radius: 2px; background: linear-gradient(90deg, var(--accent), var(--sky)); transition: width .2s; }
+
+    .work {
+      position: relative; display: flex; flex-direction: column; flex: 0 0 min(78vw, 21rem);
+      scroll-snap-align: start;
+      border: 1px solid var(--line); border-radius: 18px; overflow: hidden; background: var(--surface);
+      transition: border-color .25s;
+    }
+    .work[hidden] { display: none; }
+    .work:hover { border-color: rgba(120, 150, 255, .7); }
+    .work__thumb { position: relative; aspect-ratio: 1 / 1; overflow: hidden; background: var(--surface-2); }
+    .work__media, .work__preview { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .work__preview { opacity: 0; transition: opacity .25s; }
+    .work__preview.is-on { opacity: 1; }
+    .work__time {
+      position: absolute; right: .75rem; top: .75rem; z-index: 2; padding: .15rem .6rem; border-radius: 999px;
+      font-family: var(--mono); font-size: .78rem; color: var(--text);
+      background: rgba(11, 12, 26, .72); border: 1px solid rgba(91, 140, 255, .45);
+    }
+    .work__play {
+      position: absolute; left: .75rem; bottom: .75rem; z-index: 2; width: 2.75rem; height: 2.75rem;
+      display: grid; place-items: center; border-radius: 50%; pointer-events: none;
+      color: var(--text); background: rgba(11, 12, 26, .6); border: 1px solid rgba(238, 235, 246, .35);
+      transition: transform .25s, background-color .25s, color .25s, border-color .25s;
+    }
+    .work__play svg { width: 1rem; height: 1rem; margin-left: 2px; }
+    .work:hover .work__play, .work:focus-within .work__play { transform: scale(1.1); background: var(--blue); color: var(--on-accent); border-color: var(--blue); }
+    .work__body { display: flex; flex-direction: column; flex: 1; padding: 1.15rem 1.25rem 1.35rem; }
+    .work__cat { display: inline-flex; align-items: center; gap: .5rem; font-size: .9rem; color: var(--muted); }
+    .work__cat::before { content: ""; width: .5rem; height: .5rem; border-radius: 50%; background: var(--blue); }
+    .work__title { margin-top: .5rem; font-family: var(--display); font-size: 1.05rem; font-weight: 600; line-height: 1.3; }
+    .work__desc { margin-top: .4rem; color: var(--muted); font-size: .95rem; line-height: 1.5; }
+    .work__open {
+      align-self: flex-start; min-height: 2.75rem; margin-top: auto; padding: 1rem 0 0; font: inherit; font-weight: 700;
+      color: var(--sky); background: none; border: 0; cursor: pointer;
+      text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: .3em;
+    }
+    .work__open::after { content: ""; position: absolute; inset: 0; z-index: 3; } /* вся карточка кликабельна */
+    .work__open:focus-visible { outline: none; }
+    .work:has(.work__open:focus-visible) { outline: 3px solid var(--sky); outline-offset: 3px; }
+    .works__note { margin-top: 1.25rem; color: var(--muted); font-size: .95rem; }
+
+    /* Плеер */
+    .player {
+      width: min(92vw, 42rem); max-height: 94vh; padding: 0; overflow: auto;
+      color: var(--text); background: var(--surface); border: 1px solid rgba(91, 140, 255, .45); border-radius: 20px;
+    }
+    .player::backdrop { background: rgba(5, 6, 15, .82); }
+    @supports (backdrop-filter: blur(1px)) { .player::backdrop { backdrop-filter: blur(6px); } }
+    html:has(.player[open]) { overflow: hidden; }
+    .player__video { display: block; width: 100%; max-height: min(68vh, 40rem); background: #000; }
+    .player__info { display: grid; gap: .35rem; padding: 1.1rem 1.25rem 1.4rem; }
+    .player__title { font-family: var(--display); font-size: 1.15rem; font-weight: 600; line-height: 1.3; }
+    .player__desc { color: var(--muted); font-size: .95rem; }
+    .player__more { justify-self: start; margin-top: .5rem; min-height: 2.75rem; display: inline-flex; align-items: center; font-weight: 700; color: var(--sky); }
+    .player__close {
+      position: absolute; right: .75rem; top: .75rem; z-index: 5; display: grid; place-items: center;
+      width: 2.75rem; height: 2.75rem; padding: 0; cursor: pointer; color: var(--text);
+      background: rgba(11, 12, 26, .75); border: 1px solid rgba(91, 140, 255, .55); border-radius: 50%;
+    }
+    .player__close:hover { background: var(--blue); color: var(--on-accent); }
+    .player__close svg { width: 1.1rem; height: 1.1rem; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+
+    /* ---------- Подход ---------- */
+    .approach { background: linear-gradient(180deg, #131530 0%, #0F1950 100%); border-block: 1px solid rgba(91, 140, 255, .28); }
+    .approach__grid { display: grid; gap: 2.5rem; }
+    .approach__motto { margin-top: 1.5rem; color: var(--muted); font-size: 1.15rem; max-width: 24rem; }
+    .approach__list li { padding-block: 1.5rem; border-top: 1px solid var(--line); }
+    .approach__list li:last-child { border-bottom: 1px solid var(--line); }
+    .approach__item-title { font-family: var(--display); font-size: 1.1rem; font-weight: 600; line-height: 1.3; }
+    .approach__item-text { margin-top: .35rem; color: var(--muted); max-width: 34rem; }
+    @media (min-width: 64rem) {
+      .approach__grid { grid-template-columns: 1fr 1.2fr; gap: 5rem; }
+      .approach__head { position: sticky; top: calc(var(--header-h) + 2rem); align-self: start; }
+    }
+
+    /* ---------- Контакты ---------- */
+    #contacts { position: relative; overflow: hidden; }
+    #contacts::before {
+      content: ""; position: absolute; width: min(56rem, 140vw); aspect-ratio: 1; right: -30%; bottom: -45%;
+      background: radial-gradient(closest-side, rgba(47, 75, 219, .38), rgba(47, 75, 219, 0)); pointer-events: none;
+    }
+    #contacts .wrap { position: relative; }
+    .contacts__title {
+      font-family: var(--display);
+      font-size: clamp(1.9rem, 6.6vw, 4.5rem);
+      line-height: 1.05; letter-spacing: -0.03em; font-weight: 700; max-width: 16ch;
+      text-wrap: balance;
+    }
+    .contacts__lead { margin-top: 1.25rem; max-width: 34rem; color: var(--muted); font-size: 1.15rem; }
+    .contacts__cta { margin-top: 2rem; }
+    .contacts__grid { display: grid; gap: 3rem; margin-top: clamp(3rem, 7vw, 5rem); }
+    .contacts__info > p { color: var(--muted); max-width: 26rem; }
+    .info-list { margin-top: 1.75rem; border-top: 1px solid var(--line); }
+    .info-list li {
+      display: flex; flex-wrap: wrap; align-items: baseline; gap: .25rem 1.5rem;
+      padding-block: 1rem; border-bottom: 1px solid var(--line);
+    }
+    .info-list__name { min-width: 6rem; color: var(--muted); font-size: .95rem; }
+    .info-list a { font-weight: 700; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: .25em; text-decoration-color: var(--blue); }
+    .info-list__empty { color: var(--muted); }
+
+    .contacts__actions { display: flex; flex-direction: column; align-items: flex-start; gap: 1rem; }
+    @media (min-width: 64rem) {
+      .contacts__grid { grid-template-columns: 1fr 1.1fr; gap: 5rem; align-items: start; }
+    }
+
+    /* ---------- Footer ---------- */
+    .site-footer { border-top: 1px solid var(--line); padding-block: 2rem; }
+    .site-footer__inner { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem 2rem; }
+    .site-footer__tag { color: var(--muted); font-size: .95rem; }
+    .site-footer__links { display: flex; align-items: center; gap: 1.25rem; color: var(--muted); font-size: .95rem; }
+    .site-footer__links a { display: inline-flex; align-items: center; min-height: 2.75rem; }
+    .site-footer__links a:hover { color: var(--sky); }
+
+    /* ---------- Уменьшение анимаций ---------- */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation: none !important;
+        transition-duration: .01ms !important;
+        scroll-behavior: auto !important;
+      }
+      .work:hover .poster, .work:focus-within .poster { transform: none; }
+    }
+  </style>
+</head>
+
+<body>
+  <a class="skip-link" href="#main">Перейти к содержимому</a>
+
+  <!-- Иконки услуг: подключаются через <use> -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <symbol id="i-edit" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M8 5v14M16 5v14M3 10h5M16 10h5M3 14h5M16 14h5"/></symbol>
+      <symbol id="i-color" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5v17M12 7.5h4M12 12h4.5M12 16.5h4" /></symbol>
+      <symbol id="i-sound" viewBox="0 0 24 24"><path d="M4 10v4M8 6v12M12 3v18M16 8v8M20 11v2"/></symbol>
+      <symbol id="i-text" viewBox="0 0 24 24"><path d="M5 6V4h14v2M12 4v14M8.5 18h7"/></symbol>
+      <symbol id="i-short" viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M10.5 18.5h3"/></symbol>
+      <symbol id="i-clip" viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="15" rx="3"/><path d="M10 9.2v5.6l4.8-2.8z"/></symbol>
+      <symbol id="i-ad" viewBox="0 0 24 24"><path d="M4 10v4h3l7 4V6l-7 4H4z"/><path d="M17.5 9c1.6 1.4 1.6 4.6 0 6"/></symbol>
+      <symbol id="i-vfx" viewBox="0 0 24 24"><path d="M4 18C8 3 15 21 20 6"/><circle cx="4" cy="18" r="1.6"/><circle cx="20" cy="6" r="1.6"/></symbol>
+      <symbol id="i-play" viewBox="0 0 24 24"><path d="M6 3.5v17L21 12z" fill="currentColor" stroke="none"/></symbol>
+    </defs>
+  </svg>
+
+  <header class="site-header" id="site-header">
+    <div class="wrap site-header__inner">
+      <a class="logo" href="#home" aria-label="JEVJ1K — на главную">JEVJ1K</a>
+
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Открыть меню">
+        <span class="nav-toggle__bars"></span>
+      </button>
+
+      <nav class="nav" id="site-nav" aria-label="Основное меню">
+        <ul class="nav__list">
+          <li><a class="nav__link" href="#home">Главная</a></li>
+          <li><a class="nav__link" href="#about">Обо мне</a></li>
+          <li><a class="nav__link" href="#services">Услуги</a></li>
+          <li><a class="nav__link" href="#works">Работы</a></li>
+          <li><a class="nav__link" href="#contacts">Контакты</a></li>
+        </ul>
+        <a class="btn btn--primary nav__cta" href="https://t.me/Jevj1k" target="_blank" rel="noopener noreferrer">Написать в Telegram</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <!-- ===================== HERO ===================== -->
+    <section class="hero" id="home" aria-labelledby="hero-title">
+      <div class="wrap">
+        <p class="badge"><span class="badge__dot" aria-hidden="true"></span>Video Editor / Motion Design</p>
+        <h1 class="hero__title" id="hero-title">Монтаж видео, который цепляет</h1>
+        <p class="hero__text">Создаю динамичные эдиты, атмосферные видеоролики и анимации, превращая идеи в визуальные истории.</p>
+        <div class="hero__actions">
+          <a class="btn btn--primary btn--lg" href="https://t.me/jevj1k_pf" target="_blank" rel="noopener noreferrer">Смотреть работы</a>
+          <a class="btn btn--ghost btn--lg" href="#contacts">Связаться со мной</a>
+        </div>
+
+        <!-- Декоративная имитация таймлайна -->
+        <div class="timeline" aria-hidden="true">
+          <div class="tl__body">
+            <div class="tl__row">
+              <span></span>
+              <div class="tl__ruler">
+                <span>00:00</span><span>00:05</span><span>00:10</span><span>00:15</span><span>00:20</span><span>00:25</span>
+              </div>
+            </div>
+            <div class="tl__tracks">
+              <div class="tl__row"><span class="tl__label">V2</span>
+                <div class="tl__lane">
+                  <span class="clip clip--text" style="--l:6%;--w:16%"></span>
+                  <span class="clip clip--text" style="--l:38%;--w:12%"></span>
+                  <span class="clip clip--text" style="--l:74%;--w:18%"></span>
+                </div>
+              </div>
+              <div class="tl__row"><span class="tl__label">V1</span>
+                <div class="tl__lane">
+                  <span class="clip clip--video" style="--l:0%;--w:27%"></span>
+                  <span class="clip clip--accent" style="--l:27%;--w:21%"></span>
+                  <span class="clip clip--video" style="--l:48%;--w:17%"></span>
+                  <span class="clip clip--video" style="--l:65%;--w:35%"></span>
+                </div>
+              </div>
+              <div class="tl__row"><span class="tl__label">A1</span>
+                <div class="tl__lane">
+                  <span class="clip clip--audio" style="--l:0%;--w:44%"></span>
+                  <span class="clip clip--audio" style="--l:44%;--w:56%"></span>
+                </div>
+              </div>
+              <div class="tl__row"><span class="tl__label">A2</span>
+                <div class="tl__lane">
+                  <span class="clip clip--audio" style="--l:12%;--w:26%"></span>
+                  <span class="clip clip--audio" style="--l:58%;--w:24%"></span>
+                </div>
+              </div>
+            </div>
+            <div class="tl__scrub">
+              <div class="tl__playhead"><span class="tl__flag">00:15:08</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== ОБО МНЕ ===================== -->
+    <section class="section" id="about" aria-labelledby="about-title">
+      <div class="wrap about__grid">
+        <div>
+          <h2 class="section__title" id="about-title">Немного обо мне</h2>
+          <p class="about__text">Я начинающий видеомонтажёр: делаю эдиты, визуальные эффекты и анимации в Adobe Premiere Pro и After Effects. Люблю экспериментировать с динамикой, цветом, переходами и звуком, чтобы видео получались выразительными и запоминающимися. Постоянно развиваю навыки и пробую новые приёмы.</p>
+          <a class="btn btn--primary" href="https://t.me/jevj1k_pf" target="_blank" rel="noopener noreferrer">Смотреть полное портфолио</a>
+        </div>
+
+        <div>
+          <ul class="tools" aria-label="Программы">
+            <li class="tool">
+              <p class="tool__name">Premiere Pro</p>
+              <p class="tool__desc">Монтаж, цвет и работа со звуком.</p>
+            </li>
+            <li class="tool">
+              <p class="tool__name">After Effects</p>
+              <p class="tool__desc">Анимация, эффекты и композитинг.</p>
+            </li>
+          </ul>
+          <ul class="chips" aria-label="Направления">
+            <li class="chip">Видеоэдитинг</li>
+            <li class="chip">Motion Design</li>
+            <li class="chip">Визуальные эффекты</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== УСЛУГИ ===================== -->
+    <section class="section" id="services" aria-labelledby="services-title" style="padding-top:0">
+      <div class="wrap">
+        <h2 class="section__title" id="services-title">Что я умею</h2>
+
+        <ul class="services__grid">
+          <li class="service">
+            <svg class="service__icon" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-edit"/></svg>
+            <h3 class="service__title">Видеомонтаж</h3>
+            <p class="service__desc">Сборка материала, работа с ритмом, динамикой и переходами.</p>
+          </li>
+          <li class="service">
+            <svg class="service__icon" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-color"/></svg>
+            <h3 class="service__title">Цветокоррекция</h3>
+            <p class="service__desc">Настройка цвета, контраста и атмосферы кадра.</p>
+          </li>
+          <li class="service">
+            <svg class="service__icon" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-sound"/></svg>
+            <h3 class="service__title">Работа со звуком</h3>
+            <p class="service__desc">Синхронизация музыки, звуковые акценты и базовая обработка аудио.</p>
+          </li>
+          <li class="service">
+            <svg class="service__icon" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-text"/></svg>
+            <h3 class="service__title">Титры и текстовая анимация</h3>
+            <p class="service__desc">Стильное оформление надписей и появление текста.</p>
+          </li>
+          <li class="service">
+            <svg class="service__icon" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-short"/></svg>
+            <h3 class="service__title">Short-формат</h3>
+            <p class="service__desc">Короткие динамичные видео для социальных сетей.</p>
+          </li>
+          <li class="service">
+            <svg class="service__icon" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-clip"/></svg>
+            <h3 class="service__title">Эдиты и клипы</h3>
+            <p class="service__desc">Музыкальные эдиты, нарезки и атмосферные видеоролики.</p>
+          </li>
+          <li class="service">
+            <svg class="service__icon" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-ad"/></svg>
+            <h3 class="service__title">Рекламные видео</h3>
+            <p class="service__desc">Монтаж коротких промороликов.</p>
+          </li>
+          <li class="service">
+            <svg class="service__icon" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-vfx"/></svg>
+            <h3 class="service__title">Анимация и визуальные эффекты</h3>
+            <p class="service__desc">Создание движения, эффектов и композиций в After Effects.</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ===================== РАБОТЫ ===================== -->
+    <section class="section" id="works" aria-labelledby="works-title" style="padding-top:0">
+      <div class="wrap">
+        <div class="works__head">
+          <h2 class="section__title" id="works-title">Избранные работы</h2>
+          <a class="btn btn--primary btn--lg" href="https://t.me/jevj1k_pf" target="_blank" rel="noopener noreferrer">Все работы в Telegram</a>
+        </div>
+
+        <div class="works__bar">
+          <div class="filters" role="group" aria-label="Фильтр по категории">
+            <button class="filter" type="button" data-filter="all" aria-pressed="true">Все</button>
+            <button class="filter" type="button" data-filter="Motion Design" aria-pressed="false">Motion Design</button>
+            <button class="filter" type="button" data-filter="Visual Effects" aria-pressed="false">Visual Effects</button>
+            <button class="filter" type="button" data-filter="Music Edit" aria-pressed="false">Music Edit</button>
+          </div>
+          <div class="arrows">
+            <button class="arrow" type="button" id="works-prev" aria-label="Предыдущие работы"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+            <button class="arrow" type="button" id="works-next" aria-label="Следующие работы"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="carousel">
+        <!--
+          КАК ДОБАВИТЬ РАБОТУ: скопируй любой <li class="work"> и поменяй data-атрибуты, пути к файлам и тексты.
+          Файлы лежат в папке media: poster/ (кадр-превью), preview/ (короткий беззвучный loop для наведения),
+          video/ (версия для плеера).
+        -->
+        <ul class="carousel__track" id="works-track" tabindex="0" role="region" aria-label="Работы, прокручивай по горизонтали">
+          <li class="work" data-cat="Motion Design" data-video="media/video/adidas-logo.mp4" data-poster="media/poster/adidas-logo.jpg" data-title="Adidas logo" data-desc="Анимация появления логотипа: линии, форма и подпись.">
+            <div class="work__thumb">
+              <img class="work__media" src="media/poster/adidas-logo.jpg" width="720" height="720" loading="lazy" alt="Кадр из анимации логотипа Adidas">
+              <video class="work__preview" data-src="media/preview/adidas-logo.mp4" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"></video>
+              <span class="work__time">0:03</span>
+              <span class="work__play" aria-hidden="true"><svg fill="currentColor"><use href="#i-play"/></svg></span>
+            </div>
+            <div class="work__body">
+              <p class="work__cat">Motion Design</p>
+              <h3 class="work__title">Adidas logo</h3>
+              <p class="work__desc">Анимация появления логотипа: линии, форма и подпись.</p>
+              <button class="work__open" type="button" aria-haspopup="dialog" aria-label="Смотреть проект «Adidas logo»">Смотреть проект</button>
+            </div>
+          </li>
+          <li class="work" data-cat="Motion Design" data-video="media/video/code.mp4" data-poster="media/poster/code.jpg" data-title="Code" data-desc="Текстовая анимация: символы собираются в слово CODE.">
+            <div class="work__thumb">
+              <img class="work__media" src="media/poster/code.jpg" width="720" height="720" loading="lazy" alt="Кадр из текстовой анимации CODE">
+              <video class="work__preview" data-src="media/preview/code.mp4" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"></video>
+              <span class="work__time">0:08</span>
+              <span class="work__play" aria-hidden="true"><svg fill="currentColor"><use href="#i-play"/></svg></span>
+            </div>
+            <div class="work__body">
+              <p class="work__cat">Motion Design</p>
+              <h3 class="work__title">Code</h3>
+              <p class="work__desc">Текстовая анимация: символы собираются в слово CODE.</p>
+              <button class="work__open" type="button" aria-haspopup="dialog" aria-label="Смотреть проект «Code»">Смотреть проект</button>
+            </div>
+          </li>
+          <li class="work" data-cat="Visual Effects" data-video="media/video/level-up.mp4" data-poster="media/poster/level-up.jpg" data-title="Level Up" data-desc="Неоновые стрелки и свечение, анимация повышения уровня со звуком.">
+            <div class="work__thumb">
+              <img class="work__media" src="media/poster/level-up.jpg" width="720" height="720" loading="lazy" alt="Кадр из анимации Level Up с неоновыми стрелками">
+              <video class="work__preview" data-src="media/preview/level-up.mp4" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"></video>
+              <span class="work__time">0:05</span>
+              <span class="work__play" aria-hidden="true"><svg fill="currentColor"><use href="#i-play"/></svg></span>
+            </div>
+            <div class="work__body">
+              <p class="work__cat">Visual Effects</p>
+              <h3 class="work__title">Level Up</h3>
+              <p class="work__desc">Неоновые стрелки и свечение, анимация повышения уровня со звуком.</p>
+              <button class="work__open" type="button" aria-haspopup="dialog" aria-label="Смотреть проект «Level Up»">Смотреть проект</button>
+            </div>
+          </li>
+          <li class="work" data-cat="Motion Design" data-video="media/video/geometry-loop.mp4" data-poster="media/poster/geometry-loop.jpg" data-title="Геометрия" data-desc="Зацикленная анимация из простых геометрических фигур.">
+            <div class="work__thumb">
+              <img class="work__media" src="media/poster/geometry-loop.jpg" width="720" height="720" loading="lazy" alt="Кадр из анимации геометрических фигур">
+              <video class="work__preview" data-src="media/preview/geometry-loop.mp4" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"></video>
+              <span class="work__time">0:06</span>
+              <span class="work__play" aria-hidden="true"><svg fill="currentColor"><use href="#i-play"/></svg></span>
+            </div>
+            <div class="work__body">
+              <p class="work__cat">Motion Design</p>
+              <h3 class="work__title">Геометрия</h3>
+              <p class="work__desc">Зацикленная анимация из простых геометрических фигур.</p>
+              <button class="work__open" type="button" aria-haspopup="dialog" aria-label="Смотреть проект «Геометрия»">Смотреть проект</button>
+            </div>
+          </li>
+          <li class="work" data-cat="Motion Design" data-video="media/video/sun-and-moon.mp4" data-poster="media/poster/sun-and-moon.jpg" data-title="Солнце и луна" data-desc="Смена солнца и луны на небе, плывущие облака.">
+            <div class="work__thumb">
+              <img class="work__media" src="media/poster/sun-and-moon.jpg" width="720" height="720" loading="lazy" alt="Кадр из анимации с луной и облаками">
+              <video class="work__preview" data-src="media/preview/sun-and-moon.mp4" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"></video>
+              <span class="work__time">0:10</span>
+              <span class="work__play" aria-hidden="true"><svg fill="currentColor"><use href="#i-play"/></svg></span>
+            </div>
+            <div class="work__body">
+              <p class="work__cat">Motion Design</p>
+              <h3 class="work__title">Солнце и луна</h3>
+              <p class="work__desc">Смена солнца и луны на небе, плывущие облака.</p>
+              <button class="work__open" type="button" aria-haspopup="dialog" aria-label="Смотреть проект «Солнце и луна»">Смотреть проект</button>
+            </div>
+          </li>
+          <li class="work" data-cat="Motion Design" data-video="media/video/computer.mp4" data-poster="media/poster/computer.jpg" data-title="Компьютер" data-desc="Иллюстрация с анимированными элементами: шестерёнки, окна, интерфейс.">
+            <div class="work__thumb">
+              <img class="work__media" src="media/poster/computer.jpg" width="500" height="500" loading="lazy" alt="Кадр из анимации с компьютером и шестерёнками">
+              <video class="work__preview" data-src="media/preview/computer.mp4" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"></video>
+              <span class="work__time">0:08</span>
+              <span class="work__play" aria-hidden="true"><svg fill="currentColor"><use href="#i-play"/></svg></span>
+            </div>
+            <div class="work__body">
+              <p class="work__cat">Motion Design</p>
+              <h3 class="work__title">Компьютер</h3>
+              <p class="work__desc">Иллюстрация с анимированными элементами: шестерёнки, окна, интерфейс.</p>
+              <button class="work__open" type="button" aria-haspopup="dialog" aria-label="Смотреть проект «Компьютер»">Смотреть проект</button>
+            </div>
+          </li>
+          <li class="work" data-cat="Music Edit" data-video="media/video/choso-come-home.mp4" data-poster="media/poster/choso-come-home.jpg" data-title="Choso — Come Home" data-desc="Эдит под музыку: переходы, эффекты и работа с цветом.">
+            <div class="work__thumb">
+              <img class="work__media" src="media/poster/choso-come-home.jpg" width="720" height="720" loading="lazy" alt="Кадр из эдита Choso — Come Home">
+              <video class="work__preview" data-src="media/preview/choso-come-home.mp4" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"></video>
+              <span class="work__time">0:21</span>
+              <span class="work__play" aria-hidden="true"><svg fill="currentColor"><use href="#i-play"/></svg></span>
+            </div>
+            <div class="work__body">
+              <p class="work__cat">Music Edit</p>
+              <h3 class="work__title">Choso — Come Home</h3>
+              <p class="work__desc">Эдит под музыку: переходы, эффекты и работа с цветом.</p>
+              <button class="work__open" type="button" aria-haspopup="dialog" aria-label="Смотреть проект «Choso — Come Home»">Смотреть проект</button>
+            </div>
+          </li>
+          <li class="work" data-cat="Music Edit" data-video="media/video/satoangel.mp4" data-poster="media/poster/satoangel.jpg" data-title="Satoangel" data-desc="Эдит под музыку: ритм, переходы и визуальные эффекты.">
+            <div class="work__thumb">
+              <img class="work__media" src="media/poster/satoangel.jpg" width="576" height="576" loading="lazy" alt="Кадр из эдита Satoangel">
+              <video class="work__preview" data-src="media/preview/satoangel.mp4" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"></video>
+              <span class="work__time">0:27</span>
+              <span class="work__play" aria-hidden="true"><svg fill="currentColor"><use href="#i-play"/></svg></span>
+            </div>
+            <div class="work__body">
+              <p class="work__cat">Music Edit</p>
+              <h3 class="work__title">Satoangel</h3>
+              <p class="work__desc">Эдит под музыку: ритм, переходы и визуальные эффекты.</p>
+              <button class="work__open" type="button" aria-haspopup="dialog" aria-label="Смотреть проект «Satoangel»">Смотреть проект</button>
+            </div>
+          </li>
+          <li class="work" data-cat="Music Edit" data-video="media/video/tdd-satosug.mp4" data-poster="media/poster/tdd-satosug.jpg" data-title="TDD Satosug" data-desc="Эдит под музыку: монтаж по ритму, эффекты и цвет.">
+            <div class="work__thumb">
+              <img class="work__media" src="media/poster/tdd-satosug.jpg" width="576" height="576" loading="lazy" alt="Кадр из эдита TDD Satosug">
+              <video class="work__preview" data-src="media/preview/tdd-satosug.mp4" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"></video>
+              <span class="work__time">0:30</span>
+              <span class="work__play" aria-hidden="true"><svg fill="currentColor"><use href="#i-play"/></svg></span>
+            </div>
+            <div class="work__body">
+              <p class="work__cat">Music Edit</p>
+              <h3 class="work__title">TDD Satosug</h3>
+              <p class="work__desc">Эдит под музыку: монтаж по ритму, эффекты и цвет.</p>
+              <button class="work__open" type="button" aria-haspopup="dialog" aria-label="Смотреть проект «TDD Satosug»">Смотреть проект</button>
+            </div>
+          </li>
+        </ul>
+        <div class="carousel__progress" aria-hidden="true"><span class="carousel__bar" id="works-bar"></span></div>
+      </div>
+
+      <div class="wrap">
+        <p class="works__note">Видео сжаты для сайта. Полные версии и другие работы — в Telegram-портфолио.</p>
+      </div>
+
+      <dialog class="player" id="player" aria-labelledby="player-title">
+        <button class="player__close" type="button" id="player-close" aria-label="Закрыть плеер"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
+        <video class="player__video" id="player-video" controls playsinline preload="none"></video>
+        <div class="player__info">
+          <p class="work__cat" id="player-cat"></p>
+          <h3 class="player__title" id="player-title"></h3>
+          <p class="player__desc" id="player-desc"></p>
+          <a class="player__more" href="https://t.me/jevj1k_pf" target="_blank" rel="noopener noreferrer">Больше работ в Telegram</a>
+        </div>
+      </dialog>
+    </section>
+
+    <!-- ===================== ПОДХОД ===================== -->
+    <section class="section approach" id="approach" aria-labelledby="approach-title">
+      <div class="wrap approach__grid">
+        <div class="approach__head">
+          <h2 class="section__title" id="approach-title">Почему стоит посмотреть мои работы</h2>
+          <p class="approach__motto">Каждый кадр имеет значение.</p>
+        </div>
+        <ul class="approach__list">
+          <li>
+            <h3 class="approach__item-title">Внимание к деталям</h3>
+            <p class="approach__item-text">Аккуратная работа с переходами, ритмом и синхронизацией.</p>
+          </li>
+          <li>
+            <h3 class="approach__item-title">Индивидуальный подход</h3>
+            <p class="approach__item-text">Стремлюсь подобрать стиль под конкретную идею.</p>
+          </li>
+          <li>
+            <h3 class="approach__item-title">Постоянное развитие</h3>
+            <p class="approach__item-text">Изучаю новые техники монтажа и анимации.</p>
+          </li>
+          <li>
+            <h3 class="approach__item-title">Работа с атмосферой</h3>
+            <p class="approach__item-text">Внимание к музыке, цвету и эмоциональному восприятию видео.</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ===================== КОНТАКТЫ ===================== -->
+    <section class="section" id="contacts" aria-labelledby="contacts-title">
+      <div class="wrap">
+        <h2 class="contacts__title" id="contacts-title">Есть идея? Давай обсудим</h2>
+        <p class="contacts__lead">Расскажи о своей задумке — вместе подумаем, как превратить её в интересное видео.</p>
+        <div class="contacts__cta">
+          <a class="btn btn--primary btn--lg" href="https://t.me/Jevj1k" target="_blank" rel="noopener noreferrer">Написать в Telegram</a>
+        </div>
+
+        <div class="contacts__grid">
+          <div class="contacts__info">
+            <p>Открыт к новым идеям и интересным проектам. Напиши мне в Telegram или VK — обсудим детали.</p>
+
+            <ul class="info-list">
+              <li>
+                <span class="info-list__name">Telegram</span>
+                <a href="https://t.me/Jevj1k" target="_blank" rel="noopener noreferrer">@Jevj1k</a>
+              </li>
+              <li>
+                <span class="info-list__name">VK</span>
+                <a href="https://vk.com/jevj1k" target="_blank" rel="noopener noreferrer">vk.com/jevj1k</a>
+              </li>
+              <li>
+                <span class="info-list__name">Портфолио</span>
+                <a href="https://t.me/jevj1k_pf" target="_blank" rel="noopener noreferrer">t.me/jevj1k_pf</a>
+              </li>
+            </ul>
+          </div>
+
+          <div class="contacts__actions">
+            <a class="btn btn--primary btn--lg" href="https://t.me/Jevj1k" target="_blank" rel="noopener noreferrer">Написать в Telegram</a>
+            <a class="btn btn--ghost btn--lg" href="https://vk.com/jevj1k" target="_blank" rel="noopener noreferrer">ВКонтакте</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap site-footer__inner">
+      <a class="logo" href="#home" aria-label="JEVJ1K — наверх">JEVJ1K</a>
+      <p class="site-footer__tag">Сделано с вниманием к каждому кадру</p>
+      <div class="site-footer__links">
+        <a href="https://t.me/Jevj1k" target="_blank" rel="noopener noreferrer">Telegram</a>
+        <a href="https://vk.com/jevj1k" target="_blank" rel="noopener noreferrer">VK</a>
+        <span>© <span id="year">2026</span></span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      // Год в подвале
+      var year = document.getElementById('year');
+      if (year) year.textContent = new Date().getFullYear();
+
+      // Мобильное меню
+      var header = document.getElementById('site-header');
+      var toggle = header.querySelector('.nav-toggle');
+      var nav = document.getElementById('site-nav');
+
+      function setMenu(open) {
+        header.classList.toggle('is-open', open);
+        toggle.setAttribute('aria-expanded', String(open));
+        toggle.setAttribute('aria-label', open ? 'Закрыть меню' : 'Открыть меню');
+      }
+      toggle.addEventListener('click', function () {
+        setMenu(toggle.getAttribute('aria-expanded') !== 'true');
+      });
+      nav.addEventListener('click', function (e) {
+        if (e.target.closest('a')) setMenu(false);
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && header.classList.contains('is-open')) {
+          setMenu(false);
+          toggle.focus();
+        }
+      });
+
+      // ---- Карусель работ ----
+      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var track = document.getElementById('works-track');
+      var prev = document.getElementById('works-prev');
+      var next = document.getElementById('works-next');
+      var bar = document.getElementById('works-bar');
+      var filters = document.querySelectorAll('.filter');
+      var cards = track.querySelectorAll('.work');
+
+      function updateCarousel() {
+        var max = track.scrollWidth - track.clientWidth;
+        prev.disabled = track.scrollLeft <= 4;
+        next.disabled = track.scrollLeft >= max - 4;
+        var shown = track.scrollWidth ? (track.scrollLeft + track.clientWidth) / track.scrollWidth : 1;
+        bar.style.width = Math.min(100, Math.max(8, shown * 100)) + '%';
+      }
+      function scrollByPage(dir) {
+        track.scrollBy({ left: dir * track.clientWidth * 0.8, behavior: reduce ? 'auto' : 'smooth' });
+      }
+      prev.addEventListener('click', function () { scrollByPage(-1); });
+      next.addEventListener('click', function () { scrollByPage(1); });
+      track.addEventListener('scroll', function () { window.requestAnimationFrame(updateCarousel); }, { passive: true });
+      window.addEventListener('resize', updateCarousel);
+
+      filters.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var f = btn.getAttribute('data-filter');
+          filters.forEach(function (b) { b.setAttribute('aria-pressed', String(b === btn)); });
+          cards.forEach(function (c) { c.hidden = !(f === 'all' || c.getAttribute('data-cat') === f); });
+          track.scrollTo({ left: 0, behavior: 'auto' });
+          updateCarousel();
+        });
+      });
+
+      // ---- Превью по наведению (только мышь, без reduce-motion) ----
+      function startPreview(card) {
+        if (reduce) return;
+        var v = card.querySelector('.work__preview');
+        if (!v) return;
+        if (!v.getAttribute('src')) v.src = v.getAttribute('data-src');
+        v.addEventListener('playing', function () { v.classList.add('is-on'); }, { once: true });
+        var p = v.play();
+        if (p && p.catch) p.catch(function () {});
+      }
+      function stopPreview(card) {
+        var v = card.querySelector('.work__preview');
+        if (!v) return;
+        v.pause();
+        v.classList.remove('is-on');
+        try { v.currentTime = 0; } catch (e) {}
+      }
+      cards.forEach(function (card) {
+        card.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') startPreview(card); });
+        card.addEventListener('pointerleave', function () { stopPreview(card); });
+        card.addEventListener('focusin', function () { startPreview(card); });
+        card.addEventListener('focusout', function () { stopPreview(card); });
+      });
+
+      // ---- Плеер ----
+      var player = document.getElementById('player');
+      var pVideo = document.getElementById('player-video');
+      var opener = null;
+
+      track.addEventListener('click', function (e) {
+        var btn = e.target.closest('.work__open');
+        if (!btn) return;
+        var card = btn.closest('.work');
+        opener = btn;
+        stopPreview(card);
+        document.getElementById('player-cat').textContent = card.getAttribute('data-cat');
+        document.getElementById('player-title').textContent = card.getAttribute('data-title');
+        document.getElementById('player-desc').textContent = card.getAttribute('data-desc');
+        pVideo.poster = card.getAttribute('data-poster');
+        pVideo.src = card.getAttribute('data-video');
+        if (typeof player.showModal === 'function') {
+          player.showModal();
+        } else {
+          window.open(card.getAttribute('data-video'), '_blank', 'noopener');
+          return;
+        }
+        var p = pVideo.play();
+        if (p && p.catch) p.catch(function () {});
+      });
+      function closePlayer() { if (player.open) player.close(); }
+      document.getElementById('player-close').addEventListener('click', closePlayer);
+      player.addEventListener('click', function (e) { if (e.target === player) closePlayer(); });
+      player.addEventListener('close', function () {
+        pVideo.pause();
+        pVideo.removeAttribute('src');
+        pVideo.load();
+        if (opener) opener.focus();
+      });
+
+      updateCarousel();
+    })();
+  </script>
+</body>
+</html>
