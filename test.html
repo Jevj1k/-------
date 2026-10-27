@@ -667,14 +667,19 @@
     .site-footer__links a:hover { color: var(--sky); }
     .site-footer__links a:hover::after { transform: scaleX(1); }
 
-    /* ---------- Плавное появление разделов при скролле ----------
-       Перед появлением (.is-in) элемент скрыт, затем «выезжает» снизу.
-       Задержка stagger — через --i (задаётся из JS для .reveal-group). */
-    .js .reveal:not(.is-in) { opacity: 0; transform: translateY(28px); }
-    .js .reveal.is-in {
-      animation: reveal-in var(--t-slow) var(--ease) calc(var(--i, 0) * 80ms) backwards;
+    /* ---------- Плавное появление и исчезновение разделов при скролле ----------
+       Вне вида (без .is-in) элемент скрыт и смещён вниз.
+       Скролл вниз → плавно появляется; скролл вверх → так же плавно исчезает.
+       Каскад (stagger) — через --i (задаётся из JS для .reveal-group);
+       задержка работает в обе стороны благодаря transition-delay. */
+    .js .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition:
+        opacity var(--t-slow) var(--ease) calc(var(--i, 0) * 80ms),
+        transform var(--t-slow) var(--ease) calc(var(--i, 0) * 80ms);
     }
-    @keyframes reveal-in { from { opacity: 0; transform: translateY(28px); } }
+    .js .reveal.is-in { opacity: 1; transform: none; }
 
     /* ---------- Уменьшение анимаций ---------- */
     @media (prefers-reduced-motion: reduce) {
@@ -1575,7 +1580,9 @@
       }
 
       // =============================================================
-      // Плавное появление разделов при скролле (reveal)
+      // Появление и исчезновение разделов при скролле (reveal)
+      // Скролл вниз → объект плавно появляется,
+      // скролл вверх → плавно исчезает (класс .is-in переключается).
       // =============================================================
       var revealEls = document.querySelectorAll('.reveal');
       // Для групп (например, сетка услуг): каскадная задержка через --i
@@ -1587,10 +1594,7 @@
       if ('IntersectionObserver' in window) {
         var revealIO = new IntersectionObserver(function (entries) {
           entries.forEach(function (entry) {
-            if (entry.isIntersecting) {
-              entry.target.classList.add('is-in');
-              revealIO.unobserve(entry.target);
-            }
+            entry.target.classList.toggle('is-in', entry.isIntersecting);
           });
         }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
         revealEls.forEach(function (el) { revealIO.observe(el); });
