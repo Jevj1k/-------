@@ -668,18 +668,30 @@
     .site-footer__links a:hover::after { transform: scaleX(1); }
 
     /* ---------- Плавное появление и исчезновение разделов при скролле ----------
-       Вне вида (без .is-in) элемент скрыт и смещён вниз.
-       Скролл вниз → плавно появляется; скролл вверх → так же плавно исчезает.
-       Каскад (stagger) — через --i (задаётся из JS для .reveal-group);
-       задержка работает в обе стороны благодаря transition-delay. */
+       Вне зоны видимости (без .is-in) элемент скрыт, слегка смещён вниз и сжат.
+       Скролл вниз → элемент мягко «садится» на место (ease-out, дольше),
+       Скролл вверх → плавно уходит вверх, сжимаясь и ускоряясь (ease-in).
+       Каскад — через --i и --n (задаются из JS для .reveal-group):
+       появление идёт сверху вниз, исчезновение — снизу вверх (обратной волной). */
     .js .reveal {
+      --reveal-in-ease: cubic-bezier(0.16, 1, 0.3, 1);      /* мягкая «посадка» */
+      --reveal-out-ease: cubic-bezier(0.6, 0.04, 0.98, 0.34); /* уход вверх с ускорением */
       opacity: 0;
-      transform: translateY(28px);
+      transform: translateY(24px) scale(.985);
       transition:
-        opacity var(--t-slow) var(--ease) calc(var(--i, 0) * 80ms),
-        transform var(--t-slow) var(--ease) calc(var(--i, 0) * 80ms);
+        opacity .5s var(--reveal-out-ease),
+        transform .5s var(--reveal-out-ease);
+      transition-delay: calc((var(--n, 1) - 1 - var(--i, 0)) * 35ms),
+                        calc((var(--n, 1) - 1 - var(--i, 0)) * 35ms);
     }
-    .js .reveal.is-in { opacity: 1; transform: none; }
+    .js .reveal.is-in {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      transition-duration: .65s, .65s;
+      transition-timing-function: var(--reveal-in-ease), var(--reveal-in-ease);
+      transition-delay: calc(var(--i, 0) * 50ms),
+                        calc(var(--i, 0) * 50ms);
+    }
 
     /* ---------- Уменьшение анимаций ---------- */
     @media (prefers-reduced-motion: reduce) {
@@ -1585,10 +1597,14 @@
       // скролл вверх → плавно исчезает (класс .is-in переключается).
       // =============================================================
       var revealEls = document.querySelectorAll('.reveal');
-      // Для групп (например, сетка услуг): каскадная задержка через --i
+      // Для групп (сетка услуг и т.п.): каскад через --i (появление сверху вниз)
+      // и количество --n, чтобы при исчезновении элементы уходили снизу вверх.
       document.querySelectorAll('.reveal-group').forEach(function (group) {
-        group.querySelectorAll(':scope > .reveal').forEach(function (item, i) {
+        var items = group.querySelectorAll(':scope > .reveal');
+        var n = Math.max(items.length, 1);
+        items.forEach(function (item, i) {
           item.style.setProperty('--i', String(Math.min(i, 8)));
+          item.style.setProperty('--n', String(n));
         });
       });
       if ('IntersectionObserver' in window) {
