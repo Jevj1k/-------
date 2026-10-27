@@ -667,14 +667,31 @@
     .site-footer__links a:hover { color: var(--sky); }
     .site-footer__links a:hover::after { transform: scaleX(1); }
 
-    /* ---------- Плавное появление разделов при скролле ----------
-       Перед появлением (.is-in) элемент скрыт, затем «выезжает» снизу.
-       Задержка stagger — через --i (задаётся из JS для .reveal-group). */
-    .js .reveal:not(.is-in) { opacity: 0; transform: translateY(28px); }
-    .js .reveal.is-in {
-      animation: reveal-in var(--t-slow) var(--ease) calc(var(--i, 0) * 80ms) backwards;
+    /* ---------- Плавное появление и исчезновение разделов при скролле ----------
+       Вне зоны видимости (без .is-in) элемент скрыт, слегка смещён вниз и сжат.
+       Скролл вниз → элемент мягко «садится» на место (ease-out, дольше),
+       скролл вверх → плавно уходит вверх, сжимаясь и ускоряясь (ease-in).
+       Каскад — через --i и --n (задаются из JS для .reveal-group):
+       появление идёт сверху вниз, исчезновение — снизу вверх (обратной волной). */
+    .js .reveal {
+      --reveal-in-ease: cubic-bezier(0.16, 1, 0.3, 1);      /* мягкая «посадка» */
+      --reveal-out-ease: cubic-bezier(0.6, 0.04, 0.98, 0.34); /* уход вверх с ускорением */
+      opacity: 0;
+      transform: translateY(24px) scale(.985);
+      transition:
+        opacity .5s var(--reveal-out-ease),
+        transform .5s var(--reveal-out-ease);
+      transition-delay: calc((var(--n, 1) - 1 - var(--i, 0)) * 35ms),
+                        calc((var(--n, 1) - 1 - var(--i, 0)) * 35ms);
     }
-    @keyframes reveal-in { from { opacity: 0; transform: translateY(28px); } }
+    .js .reveal.is-in {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      transition-duration: .65s, .65s;
+      transition-timing-function: var(--reveal-in-ease), var(--reveal-in-ease);
+      transition-delay: calc(var(--i, 0) * 50ms),
+                        calc(var(--i, 0) * 50ms);
+    }
 
     /* ---------- Уменьшение анимаций ---------- */
     @media (prefers-reduced-motion: reduce) {
@@ -1575,22 +1592,25 @@
       }
 
       // =============================================================
-      // Плавное появление разделов при скролле (reveal)
+      // Появление и исчезновение разделов при скролле (reveal)
+      // Скролл вниз → объект плавно появляется,
+      // скролл вверх → плавно исчезает (класс .is-in переключается).
       // =============================================================
       var revealEls = document.querySelectorAll('.reveal');
-      // Для групп (например, сетка услуг): каскадная задержка через --i
+      // Для групп (сетка услуг и т.п.): каскад через --i (появление сверху вниз)
+      // и количество --n, чтобы при исчезновении элементы уходили снизу вверх.
       document.querySelectorAll('.reveal-group').forEach(function (group) {
-        group.querySelectorAll(':scope > .reveal').forEach(function (item, i) {
+        var items = group.querySelectorAll(':scope > .reveal');
+        var n = Math.max(items.length, 1);
+        items.forEach(function (item, i) {
           item.style.setProperty('--i', String(Math.min(i, 8)));
+          item.style.setProperty('--n', String(n));
         });
       });
       if ('IntersectionObserver' in window) {
         var revealIO = new IntersectionObserver(function (entries) {
           entries.forEach(function (entry) {
-            if (entry.isIntersecting) {
-              entry.target.classList.add('is-in');
-              revealIO.unobserve(entry.target);
-            }
+            entry.target.classList.toggle('is-in', entry.isIntersecting);
           });
         }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
         revealEls.forEach(function (el) { revealIO.observe(el); });
