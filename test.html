@@ -42,6 +42,12 @@
 
       --header-h: 4rem;
       --radius: 14px;
+
+      /* Скорости и кривые анимаций — меняй здесь, чтобы перенастроить всё сразу */
+      --ease: cubic-bezier(0.4, 0, 0.2, 1);
+      --t-fast: .2s;
+      --t-med: .25s;
+      --t-slow: .35s;
     }
 
     *, *::before, *::after { box-sizing: border-box; }
@@ -93,14 +99,34 @@
       min-height: 3rem; padding: .7rem 1.5rem;
       font: inherit; font-weight: 700; text-decoration: none; text-align: center;
       border: 1.5px solid transparent; border-radius: 999px; cursor: pointer;
-      transition: background-color .2s, color .2s, border-color .2s, transform .2s;
+      transition: background-color var(--t-med), color var(--t-med), border-color var(--t-med),
+                  transform var(--t-med) var(--ease), box-shadow var(--t-med), background-position var(--t-slow);
     }
-    .btn--primary { background: linear-gradient(135deg, #9378FF 0%, #5B8CFF 100%); color: var(--on-accent); }
-    .btn--primary:hover { background: linear-gradient(135deg, #A892FF 0%, #7CA4FF 100%); }
-    .btn--ghost { border-color: var(--line); color: var(--text); background: transparent; }
-    .btn--ghost:hover { border-color: var(--blue); background: var(--blue-soft); }
+    .btn--primary {
+      background: linear-gradient(135deg, #9378FF 0%, #5B8CFF 50%, #A892FF 100%);
+      background-size: 200% 200%; background-position: 0% 50%;
+      color: var(--on-accent);
+    }
+    .btn--primary:hover {
+      background-position: 100% 50%;
+      transform: scale(1.04);
+      box-shadow: 0 0 1.1rem rgba(147, 120, 255, .4), 0 0 2rem rgba(91, 140, 255, .22);
+    }
+    .btn--ghost { position: relative; border-color: var(--line); color: var(--text); background: transparent; }
+    .btn--ghost::before {
+      content: ""; position: absolute; inset: 0; border-radius: inherit;
+      background: linear-gradient(135deg, var(--blue-soft), var(--accent-soft));
+      opacity: 0; transition: opacity var(--t-med);
+    }
+    .btn--ghost:hover::before { opacity: 1; }
+    .btn--ghost:hover { border-color: var(--accent); color: var(--text); transform: scale(1.04); }
     .btn--lg { min-height: 3.5rem; padding-inline: 2.25rem; font-size: 1.125rem; }
-    .btn:active { transform: translateY(1px); }
+    .btn--lg.btn--primary::after {
+      content: "→"; margin-left: .5rem;
+      transition: transform var(--t-med) var(--ease);
+    }
+    .btn--lg.btn--primary:hover::after { transform: translateX(4px); }
+    .btn:active { transform: scale(.97); }
 
     /* ---------- Header ---------- */
     .site-header {
@@ -123,10 +149,22 @@
       display: inline-flex; align-items: center; gap: .5rem;
       min-height: 2.75rem;
       font-family: var(--display); font-weight: 700; font-size: 1.05rem; letter-spacing: .02em; text-decoration: none;
+      transition: text-shadow var(--t-med);
     }
     .logo::after {
       content: ""; width: .5rem; height: .5rem; border-radius: 50%;
       background: linear-gradient(135deg, var(--accent), var(--blue));
+      box-shadow: 0 0 0 rgba(147, 120, 255, 0);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      .logo::after { animation: logo-pulse 1.8s ease-in-out infinite; }
+      @keyframes logo-pulse {
+        0%, 100% { transform: scale(1); box-shadow: 0 0 0 rgba(147, 120, 255, 0); }
+        50% { transform: scale(1.4); box-shadow: 0 0 .5rem rgba(147, 120, 255, .55); }
+      }
+    }
+    .logo:hover {
+      text-shadow: 1px 0 rgba(91, 140, 255, .65), -1px 0 rgba(147, 120, 255, .65), 0 0 10px rgba(147, 120, 255, .3);
     }
 
     .nav-toggle {
@@ -150,11 +188,22 @@
     .nav { display: flex; align-items: center; gap: 1.5rem; }
     .nav__list { display: flex; align-items: center; gap: .25rem; }
     .nav__link {
+      position: relative;
       display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0 .75rem;
       color: var(--muted); font-size: .95rem; font-weight: 500; text-decoration: none;
-      border-radius: 8px; transition: color .2s;
+      border-radius: 8px;
+      transition: color var(--t-med) var(--ease), transform var(--t-med) var(--ease);
     }
-    .nav__link:hover { color: var(--sky); }
+    .nav__link::after {
+      content: ""; position: absolute; left: 50%; bottom: .2rem;
+      width: 0; height: 2px; border-radius: 1px;
+      background: linear-gradient(90deg, var(--accent), var(--sky));
+      transform: translateX(-50%);
+      transition: width var(--t-med) var(--ease);
+    }
+    .nav__link:hover, .nav__link:focus-visible { color: var(--text); }
+    .nav__link:hover::after, .nav__link:focus-visible::after { width: 100%; }
+    .nav__link:active { transform: scale(.97); }
     .nav__cta { min-height: 2.5rem; padding: .4rem 1.1rem; font-size: .95rem; }
 
     @media (max-width: 47.99rem) {
@@ -207,7 +256,9 @@
       padding: .4rem .9rem; margin-bottom: 1.5rem;
       font-family: var(--mono); font-size: .85rem; color: var(--text);
       border: 1px solid rgba(91, 140, 255, .45); border-radius: 999px; background: var(--blue-soft);
+      transition: box-shadow var(--t-med), border-color var(--t-med);
     }
+    .badge:hover { border-color: rgba(91, 140, 255, .85); box-shadow: 0 0 .9rem rgba(91, 140, 255, .35); }
     .badge__dot { width: .55rem; height: .55rem; border-radius: 50%; background: var(--sky); }
     @media (prefers-reduced-motion: no-preference) {
       .badge__dot { animation: rec 1.6s steps(1, end) infinite; }
@@ -227,56 +278,159 @@
     }
     .hero__actions { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 2rem; }
 
-    /* Имитация таймлайна. Чисто декоративный блок. */
+    /* ---------- Интерактивный таймлайн видеоредактора ---------- */
     .timeline {
       margin-top: clamp(2.5rem, 7vw, 4.5rem);
       padding: 1.9rem 1rem 1rem; border: 1px solid var(--line); border-radius: 18px;
       background: var(--surface);
     }
-    .tl__body { position: relative; }
+    .tl__controls { display: flex; align-items: center; gap: .5rem; margin-bottom: .9rem; }
+    .tl__play {
+      display: grid; place-items: center; width: 2.25rem; height: 2.25rem; padding: 0;
+      color: var(--text); background: var(--blue-soft);
+      border: 1px solid rgba(91, 140, 255, .55); border-radius: 50%; cursor: pointer;
+      transition: background-color var(--t-med), color var(--t-med), border-color var(--t-med), transform var(--t-med) var(--ease);
+    }
+    .tl__play:hover { background: var(--blue); color: var(--on-accent); border-color: var(--blue); }
+    .tl__play:active { transform: scale(.97); }
+    .tl__play svg { width: .9rem; height: .9rem; }
+    .tl__icon-pause { display: none; }
+    .tl__play.is-playing .tl__icon-play { display: none; }
+    .tl__play.is-playing .tl__icon-pause { display: block; }
+    .tl__speed {
+      min-width: 2.5rem; height: 1.9rem; padding: 0 .5rem;
+      font-family: var(--mono); font-size: .75rem; font-weight: 700;
+      color: var(--muted); background: transparent;
+      border: 1px solid var(--line); border-radius: 999px; cursor: pointer;
+      transition: color var(--t-med), border-color var(--t-med), background-color var(--t-med), transform var(--t-med) var(--ease);
+    }
+    .tl__speed:hover { color: var(--text); border-color: var(--blue); background: var(--blue-soft); }
+    .tl__speed:active { transform: scale(.97); }
+    .tl__timecode {
+      margin-left: auto;
+      font-family: var(--mono); font-size: .8rem; font-weight: 700; color: var(--sky);
+      font-variant-numeric: tabular-nums;
+    }
+    .tl__body {
+      position: relative; padding-top: 1.5rem;
+      user-select: none; -webkit-user-select: none;
+      -webkit-tap-highlight-color: rgba(91, 140, 255, .25);
+    }
     .tl__row { display: grid; grid-template-columns: 2.5rem 1fr; align-items: center; }
     .tl__tracks { display: flex; flex-direction: column; gap: .4rem; margin-top: .6rem; }
     .tl__label { font-family: var(--mono); font-size: .75rem; color: var(--muted); }
     .tl__ruler {
-      display: flex; justify-content: space-between;
+      position: relative;
       font-family: var(--mono); font-size: .72rem; color: var(--muted);
       padding-bottom: .45rem; border-bottom: 1px solid var(--line);
+      cursor: pointer; touch-action: manipulation;
     }
-    .tl__ruler span:nth-child(even) { display: none; }
+    .tl__ruler-labels { display: flex; justify-content: space-between; flex: 1; }
+    .tl__ruler-labels span { position: relative; z-index: 1; transition: color var(--t-med); }
+    .tl__ruler-labels span:nth-child(even) { display: none; }
+    .tl__ruler-labels span:hover { color: var(--sky); }
+    .tl__hover-line {
+      position: absolute; top: 0; bottom: 0; left: 0; width: 1px; z-index: 2;
+      background: var(--sky); opacity: 0; pointer-events: none;
+      transition: opacity var(--t-fast);
+    }
+    .tl__hover-time {
+      position: absolute; top: 100%; left: 0; transform: translate(-50%, .2rem); z-index: 3;
+      padding: 0 .3rem; border-radius: 3px;
+      font-family: var(--mono); font-size: .65rem; font-weight: 700; white-space: nowrap;
+      background: var(--bg); color: var(--sky); border: 1px solid rgba(91, 140, 255, .4);
+      opacity: 0; pointer-events: none; transition: opacity var(--t-fast);
+    }
+    .tl__ruler.is-hover .tl__hover-line, .tl__ruler.is-hover .tl__hover-time { opacity: 1; }
     .tl__lane {
       position: relative; height: 2.1rem; border-radius: 6px;
       background: rgba(238, 235, 246, 0.04);
+      cursor: pointer; touch-action: manipulation;
     }
     .clip {
       position: absolute; top: 0; bottom: 0; left: var(--l); width: var(--w);
       border-radius: 6px; border: 1px solid var(--bg);
+      cursor: pointer; touch-action: manipulation;
+      transition: transform var(--t-med) var(--ease), box-shadow var(--t-med), border-color var(--t-fast);
     }
+    .clip:focus-visible { outline: 2px solid var(--sky); outline-offset: 1px; }
     .clip--video { background: linear-gradient(90deg, #2F43A8, #26357F); }
     .clip--accent { background: var(--accent); }
     .clip--text { background: #3447C9; }
-    .clip--audio {
-      background:
-        repeating-linear-gradient(90deg, rgba(91, 140, 255, .9) 0 2px, transparent 2px 6px) center / 100% 55% no-repeat,
-        #1A2152;
+    .clip--audio { background: #1A2152; overflow: hidden; }
+    .clip--audio .wave {
+      position: absolute; inset: 0; display: flex; align-items: center;
+      gap: 2px; padding: 0 3px; overflow: hidden;
     }
+    .clip--audio .wave__bar {
+      flex: 1 1 auto; min-width: 1px;
+      background: linear-gradient(180deg, var(--sky), var(--blue));
+      border-radius: 1px; transform-origin: center;
+    }
+    .clip__played {
+      position: absolute; inset: 0; width: 0;
+      background: linear-gradient(90deg, rgba(88, 199, 255, .3), rgba(91, 140, 255, .18));
+      pointer-events: none;
+    }
+    .clip:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 .8rem rgba(91, 140, 255, .35);
+      border-color: rgba(120, 150, 255, .6);
+    }
+    .clip.is-active {
+      filter: brightness(1.2);
+      box-shadow: 0 0 .9rem rgba(91, 140, 255, .45);
+    }
+    .clip.is-selected {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px var(--accent), 0 0 1rem rgba(147, 120, 255, .35);
+    }
+    .clip:active { transform: scale(.97); }
     .tl__scrub { position: absolute; top: 0; bottom: 0; left: 2.5rem; right: 0; pointer-events: none; }
     .tl__playhead {
-      position: absolute; top: 0; bottom: 0; left: 62%;
+      position: absolute; top: 0; bottom: 0; left: 0;
       width: 2px; background: var(--sky);
+      box-shadow: 0 0 .4rem rgba(88, 199, 255, .6);
     }
     .tl__flag {
-      position: absolute; top: -1.45rem; left: 50%; transform: translateX(-50%);
+      position: absolute; top: .1rem; left: 50%; transform: translateX(-50%);
       padding: .1rem .4rem; border-radius: 4px;
       font-family: var(--mono); font-size: .7rem; font-weight: 700; white-space: nowrap;
       background: var(--sky); color: var(--on-accent);
+      cursor: grab; touch-action: none; pointer-events: auto;
     }
+    .tl__flag:active { cursor: grabbing; }
+    .tl__tooltip {
+      position: absolute; z-index: 5; top: 0; left: 0;
+      transform: translate(-50%, -100%);
+      padding: .25rem .55rem; border-radius: 5px;
+      font-family: var(--mono); font-size: .7rem; font-weight: 700; white-space: nowrap;
+      background: var(--bg); color: var(--text);
+      border: 1px solid rgba(91, 140, 255, .5);
+      box-shadow: 0 0 .6rem rgba(91, 140, 255, .25);
+      opacity: 0; pointer-events: none;
+      transition: opacity var(--t-fast);
+    }
+    .tl__tooltip.is-below { transform: translate(-50%, 0); }
+    .tl__tooltip.is-on { opacity: 1; }
     @media (prefers-reduced-motion: no-preference) {
-      /* Единственная «постановочная» анимация на странице: плейхед проходит таймлайн один раз. */
-      .tl__playhead { animation: scrub 2.8s cubic-bezier(.5, 0, .2, 1) .3s both; }
-      @keyframes scrub { from { left: 0; } to { left: 62%; } }
+      /* Появление клипов при попадании в область видимости (stagger ~60 мс) */
+      .js .tl:not(.is-in) .clip { opacity: 0; transform: translateY(14px); }
+      .js .tl.is-in .clip {
+        animation: clip-in var(--t-slow) var(--ease) calc(var(--i, 0) * 60ms) backwards;
+      }
+      @keyframes clip-in { from { opacity: 0; transform: translateY(14px); } }
+      /* Волны «дышат», пока идёт воспроизведение */
+      .tl.is-playing .clip--audio .wave__bar {
+        animation: breathe .9s ease-in-out var(--d, 0s) infinite;
+      }
+      @keyframes breathe {
+        0%, 100% { transform: scaleY(.55); }
+        50% { transform: scaleY(1); }
+      }
     }
     @media (min-width: 40rem) {
-      .tl__ruler span:nth-child(even) { display: inline; }
+      .tl__ruler-labels span:nth-child(even) { display: inline; }
       .tl__lane { height: 2.5rem; }
       .timeline { padding: 2.4rem 1.5rem 1.5rem; }
     }
@@ -289,8 +443,15 @@
     .tool {
       padding: 1.25rem 1.5rem; border: 1px solid var(--line); border-left: 4px solid var(--accent);
       border-radius: var(--radius); background: var(--surface);
+      transition: transform var(--t-med) var(--ease), box-shadow var(--t-med), border-color var(--t-med);
     }
     .tool:nth-child(2) { border-left-color: var(--blue); }
+    .tool:hover {
+      transform: translateY(-3px);
+      border-color: rgba(120, 150, 255, .6);
+      box-shadow: 0 0 1rem rgba(91, 140, 255, .2);
+    }
+    .tool:active { transform: scale(.97); }
     .tool__name { font-family: var(--display); font-size: 1.2rem; font-weight: 600; letter-spacing: -0.01em; }
     .tool__desc { margin-top: .25rem; color: var(--muted); }
     .chips { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1.25rem; }
@@ -310,11 +471,19 @@
       border: 1px solid var(--line); border-radius: 18px; overflow: hidden;
     }
     .service {
+      position: relative;
       padding: 1.75rem 1.5rem; background: var(--bg);
-      transition: background-color .25s;
+      transition: background-color var(--t-med), box-shadow var(--t-med);
     }
-    .service:hover { background: var(--surface); }
-    .service__icon { width: 1.75rem; height: 1.75rem; color: var(--blue); transition: color .25s; }
+    .service::before {
+      content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--blue));
+      opacity: 0; transition: opacity var(--t-med);
+    }
+    .service:hover { background: var(--surface); box-shadow: inset 0 0 1.2rem rgba(91, 140, 255, .12); }
+    .service:hover::before { opacity: 1; }
+    .service:active { transform: scale(.97); }
+    .service__icon { width: 1.75rem; height: 1.75rem; color: var(--blue); transition: color var(--t-med); }
     .service:hover .service__icon { color: var(--accent); }
     .service__title { margin-top: 1.1rem; font-family: var(--display); font-size: .95rem; font-weight: 600; line-height: 1.35; }
     .service__desc { margin-top: .4rem; color: var(--muted); font-size: .95rem; line-height: 1.5; }
@@ -331,18 +500,20 @@
     .filter {
       min-height: 2.75rem; padding: .4rem 1.1rem; font: inherit; font-weight: 600; font-size: .95rem;
       color: var(--muted); background: transparent; border: 1px solid var(--line); border-radius: 999px; cursor: pointer;
-      transition: color .2s, border-color .2s, background-color .2s;
+      transition: color var(--t-med), border-color var(--t-med), background-color var(--t-med), transform var(--t-med) var(--ease);
     }
     .filter:hover { color: var(--text); border-color: var(--blue); }
+    .filter:active { transform: scale(.97); }
     .filter[aria-pressed="true"] { color: var(--on-accent); background: var(--blue); border-color: var(--blue); }
     .arrows { display: flex; gap: .6rem; }
     @media (max-width: 39.99rem) { .arrows { display: none; } }
     .arrow {
       display: grid; place-items: center; width: 3rem; height: 3rem; padding: 0; cursor: pointer;
       color: var(--text); background: var(--blue-soft); border: 1px solid rgba(91, 140, 255, .55); border-radius: 50%;
-      transition: background-color .2s, color .2s, opacity .2s;
+      transition: background-color var(--t-med), color var(--t-med), opacity var(--t-med), transform var(--t-med) var(--ease);
     }
     .arrow:hover:not(:disabled) { background: var(--blue); color: var(--on-accent); }
+    .arrow:active:not(:disabled) { transform: scale(.97); }
     .arrow:disabled { opacity: .35; cursor: default; }
     .arrow svg { width: 1.2rem; height: 1.2rem; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
@@ -361,10 +532,22 @@
       position: relative; display: flex; flex-direction: column; flex: 0 0 min(78vw, 21rem);
       scroll-snap-align: start;
       border: 1px solid var(--line); border-radius: 18px; overflow: hidden; background: var(--surface);
-      transition: border-color .25s;
+      transition: transform var(--t-med) var(--ease), border-color var(--t-med), box-shadow var(--t-med);
+    }
+    .work::before {
+      /* Акцентная линия сверху: надёжно во всех браузерах, не перекрывает превью */
+      content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px; z-index: 2;
+      background: linear-gradient(90deg, var(--accent), var(--blue), var(--sky));
+      opacity: 0; transition: opacity var(--t-med); pointer-events: none;
     }
     .work[hidden] { display: none; }
-    .work:hover { border-color: rgba(120, 150, 255, .7); }
+    .work:hover {
+      transform: translateY(-4px);
+      border-color: rgba(120, 150, 255, .7);
+      box-shadow: 0 0 1.2rem rgba(91, 140, 255, .25), 0 .6rem 2rem rgba(11, 12, 26, .5);
+    }
+    .work:hover::before, .work:focus-within::before { opacity: 1; }
+    .work:active { transform: scale(.97); }
     .work__thumb { position: relative; aspect-ratio: 1 / 1; overflow: hidden; background: var(--surface-2); }
     .work__media, .work__preview { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
     .work__preview { opacity: 0; transition: opacity .25s; }
@@ -454,7 +637,11 @@
       padding-block: 1rem; border-bottom: 1px solid var(--line);
     }
     .info-list__name { min-width: 6rem; color: var(--muted); font-size: .95rem; }
-    .info-list a { font-weight: 700; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: .25em; text-decoration-color: var(--blue); }
+    .info-list a {
+      font-weight: 700; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: .25em; text-decoration-color: var(--blue);
+      transition: color var(--t-med), text-decoration-color var(--t-med);
+    }
+    .info-list a:hover { color: var(--sky); text-decoration-color: var(--sky); }
     .info-list__empty { color: var(--muted); }
 
     .contacts__actions { display: flex; flex-direction: column; align-items: flex-start; gap: 1rem; }
@@ -467,8 +654,27 @@
     .site-footer__inner { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem 2rem; }
     .site-footer__tag { color: var(--muted); font-size: .95rem; }
     .site-footer__links { display: flex; align-items: center; gap: 1.25rem; color: var(--muted); font-size: .95rem; }
-    .site-footer__links a { display: inline-flex; align-items: center; min-height: 2.75rem; }
+    .site-footer__links a {
+      position: relative;
+      display: inline-flex; align-items: center; min-height: 2.75rem;
+      transition: color var(--t-med);
+    }
+    .site-footer__links a::after {
+      content: ""; position: absolute; left: 0; right: 0; bottom: .15rem; height: 1px;
+      background: var(--sky); transform: scaleX(0); transform-origin: left;
+      transition: transform var(--t-med) var(--ease);
+    }
     .site-footer__links a:hover { color: var(--sky); }
+    .site-footer__links a:hover::after { transform: scaleX(1); }
+
+    /* ---------- Плавное появление разделов при скролле ----------
+       Перед появлением (.is-in) элемент скрыт, затем «выезжает» снизу.
+       Задержка stagger — через --i (задаётся из JS для .reveal-group). */
+    .js .reveal:not(.is-in) { opacity: 0; transform: translateY(28px); }
+    .js .reveal.is-in {
+      animation: reveal-in var(--t-slow) var(--ease) calc(var(--i, 0) * 80ms) backwards;
+    }
+    @keyframes reveal-in { from { opacity: 0; transform: translateY(28px); } }
 
     /* ---------- Уменьшение анимаций ---------- */
     @media (prefers-reduced-motion: reduce) {
@@ -477,7 +683,12 @@
         transition-duration: .01ms !important;
         scroll-behavior: auto !important;
       }
-      .work:hover .poster, .work:focus-within .poster { transform: none; }
+      /* Без подъёмов, наклонов и свечения при reduced-motion */
+      .work:hover, .work:focus-within,
+      .service:hover, .tool:hover, .clip:hover,
+      .btn--primary:hover, .btn--ghost:hover, .logo:hover { transform: none; text-shadow: none; }
+      /* Разделы видны сразу, без появления */
+      .js .reveal { opacity: 1 !important; transform: none !important; }
     }
   </style>
 </head>
@@ -534,47 +745,61 @@
           <a class="btn btn--ghost btn--lg" href="#contacts">Связаться со мной</a>
         </div>
 
-        <!-- Декоративная имитация таймлайна -->
-        <div class="timeline" aria-hidden="true">
-          <div class="tl__body">
+        <!-- Интерактивный таймлайн видеоредактора -->
+        <div class="timeline" id="timeline" role="group" aria-label="Интерактивный таймлайн видеоредактора">
+          <div class="tl__controls">
+            <button class="tl__play" id="tl-play" type="button" aria-label="Воспроизвести" aria-pressed="false">
+              <svg class="tl__icon-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5v17L21 12z" fill="currentColor" stroke="none"/></svg>
+              <svg class="tl__icon-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h3v16h-3zM15 4h3v16h-3z" fill="currentColor" stroke="none"/></svg>
+            </button>
+            <button class="tl__speed" id="tl-speed" type="button" aria-label="Скорость воспроизведения: 1x">1x</button>
+            <span class="tl__timecode" id="tl-timecode" aria-hidden="true">00:00:00</span>
+          </div>
+
+          <div class="tl__body" id="tl-body" tabindex="0" aria-label="Шкала времени: стрелки ← → перематывают">
             <div class="tl__row">
               <span></span>
-              <div class="tl__ruler">
-                <span>00:00</span><span>00:05</span><span>00:10</span><span>00:15</span><span>00:20</span><span>00:25</span>
+              <div class="tl__ruler" id="tl-ruler">
+                <div class="tl__ruler-labels">
+                  <span>00:00</span><span>00:05</span><span>00:10</span><span>00:15</span><span>00:20</span><span>00:25</span>
+                </div>
+                <span class="tl__hover-line" id="tl-hover-line" aria-hidden="true"></span>
+                <span class="tl__hover-time" id="tl-hover-time" aria-hidden="true">00:00:00</span>
               </div>
             </div>
             <div class="tl__tracks">
               <div class="tl__row"><span class="tl__label">V2</span>
-                <div class="tl__lane">
-                  <span class="clip clip--text" style="--l:6%;--w:16%"></span>
-                  <span class="clip clip--text" style="--l:38%;--w:12%"></span>
-                  <span class="clip clip--text" style="--l:74%;--w:18%"></span>
+                <div class="tl__lane" data-lane="V2">
+                  <span class="clip clip--text" style="--l:6%;--w:16%" data-name="Титры" data-dur="4" data-start="1.5"></span>
+                  <span class="clip clip--text" style="--l:38%;--w:12%" data-name="Титры" data-dur="3" data-start="9.5"></span>
+                  <span class="clip clip--text" style="--l:74%;--w:18%" data-name="Титры" data-dur="4.5" data-start="18.5"></span>
                 </div>
               </div>
               <div class="tl__row"><span class="tl__label">V1</span>
-                <div class="tl__lane">
-                  <span class="clip clip--video" style="--l:0%;--w:27%"></span>
-                  <span class="clip clip--accent" style="--l:27%;--w:21%"></span>
-                  <span class="clip clip--video" style="--l:48%;--w:17%"></span>
-                  <span class="clip clip--video" style="--l:65%;--w:35%"></span>
+                <div class="tl__lane" data-lane="V1">
+                  <span class="clip clip--video" style="--l:0%;--w:27%" data-name="Intro" data-dur="6.75" data-start="0"></span>
+                  <span class="clip clip--accent" style="--l:27%;--w:21%" data-name="B-roll" data-dur="5.25" data-start="6.75"></span>
+                  <span class="clip clip--video" style="--l:48%;--w:17%" data-name="Main" data-dur="4.25" data-start="12"></span>
+                  <span class="clip clip--video" style="--l:65%;--w:35%" data-name="Outro" data-dur="8.75" data-start="16.25"></span>
                 </div>
               </div>
               <div class="tl__row"><span class="tl__label">A1</span>
-                <div class="tl__lane">
-                  <span class="clip clip--audio" style="--l:0%;--w:44%"></span>
-                  <span class="clip clip--audio" style="--l:44%;--w:56%"></span>
+                <div class="tl__lane" data-lane="A1">
+                  <span class="clip clip--audio" style="--l:0%;--w:44%" data-name="Музыка" data-dur="11" data-start="0"></span>
+                  <span class="clip clip--audio" style="--l:44%;--w:56%" data-name="Музыка" data-dur="14" data-start="11"></span>
                 </div>
               </div>
               <div class="tl__row"><span class="tl__label">A2</span>
-                <div class="tl__lane">
-                  <span class="clip clip--audio" style="--l:12%;--w:26%"></span>
-                  <span class="clip clip--audio" style="--l:58%;--w:24%"></span>
+                <div class="tl__lane" data-lane="A2">
+                  <span class="clip clip--audio" style="--l:12%;--w:26%" data-name="Звук" data-dur="6.5" data-start="3"></span>
+                  <span class="clip clip--audio" style="--l:58%;--w:24%" data-name="Звук" data-dur="6" data-start="14.5"></span>
                 </div>
               </div>
             </div>
-            <div class="tl__scrub">
-              <div class="tl__playhead"><span class="tl__flag">00:15:08</span></div>
+            <div class="tl__scrub" id="tl-scrub">
+              <div class="tl__playhead" id="tl-playhead"><span class="tl__flag" id="tl-flag">00:00:00</span></div>
             </div>
+            <div class="tl__tooltip" id="tl-tooltip" role="tooltip" aria-hidden="true"></div>
           </div>
         </div>
       </div>
@@ -582,14 +807,14 @@
 
     <!-- ===================== ОБО МНЕ ===================== -->
     <section class="section" id="about" aria-labelledby="about-title">
-      <div class="wrap about__grid">
-        <div>
+      <div class="wrap about__grid reveal-group">
+        <div class="reveal">
           <h2 class="section__title" id="about-title">Немного обо мне</h2>
           <p class="about__text">Я начинающий видеомонтажёр: делаю эдиты, визуальные эффекты и анимации в Adobe Premiere Pro и After Effects. Люблю экспериментировать с динамикой, цветом, переходами и звуком, чтобы видео получались выразительными и запоминающимися. Постоянно развиваю навыки и пробую новые приёмы.</p>
           <a class="btn btn--primary" href="https://t.me/jevj1k_pf" target="_blank" rel="noopener noreferrer">Смотреть полное портфолио</a>
         </div>
 
-        <div>
+        <div class="reveal">
           <ul class="tools" aria-label="Программы">
             <li class="tool">
               <p class="tool__name">Premiere Pro</p>
@@ -612,45 +837,45 @@
     <!-- ===================== УСЛУГИ ===================== -->
     <section class="section" id="services" aria-labelledby="services-title" style="padding-top:0">
       <div class="wrap">
-        <h2 class="section__title" id="services-title">Что я умею</h2>
+        <h2 class="section__title reveal" id="services-title">Что я умею</h2>
 
-        <ul class="services__grid">
-          <li class="service">
+        <ul class="services__grid reveal-group">
+          <li class="service reveal">
             <svg class="service__icon" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-edit"/></svg>
             <h3 class="service__title">Видеомонтаж</h3>
             <p class="service__desc">Сборка материала, работа с ритмом, динамикой и переходами.</p>
           </li>
-          <li class="service">
+          <li class="service reveal">
             <svg class="service__icon" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-color"/></svg>
             <h3 class="service__title">Цветокоррекция</h3>
             <p class="service__desc">Настройка цвета, контраста и атмосферы кадра.</p>
           </li>
-          <li class="service">
+          <li class="service reveal">
             <svg class="service__icon" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-sound"/></svg>
             <h3 class="service__title">Работа со звуком</h3>
             <p class="service__desc">Синхронизация музыки, звуковые акценты и базовая обработка аудио.</p>
           </li>
-          <li class="service">
+          <li class="service reveal">
             <svg class="service__icon" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-text"/></svg>
             <h3 class="service__title">Титры и текстовая анимация</h3>
             <p class="service__desc">Стильное оформление надписей и появление текста.</p>
           </li>
-          <li class="service">
+          <li class="service reveal">
             <svg class="service__icon" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-short"/></svg>
             <h3 class="service__title">Short-формат</h3>
             <p class="service__desc">Короткие динамичные видео для социальных сетей.</p>
           </li>
-          <li class="service">
+          <li class="service reveal">
             <svg class="service__icon" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-clip"/></svg>
             <h3 class="service__title">Эдиты и клипы</h3>
             <p class="service__desc">Музыкальные эдиты, нарезки и атмосферные видеоролики.</p>
           </li>
-          <li class="service">
+          <li class="service reveal">
             <svg class="service__icon" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-ad"/></svg>
             <h3 class="service__title">Рекламные видео</h3>
             <p class="service__desc">Монтаж коротких промороликов.</p>
           </li>
-          <li class="service">
+          <li class="service reveal">
             <svg class="service__icon" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-vfx"/></svg>
             <h3 class="service__title">Анимация и визуальные эффекты</h3>
             <p class="service__desc">Создание движения, эффектов и композиций в After Effects.</p>
@@ -662,12 +887,12 @@
     <!-- ===================== РАБОТЫ ===================== -->
     <section class="section" id="works" aria-labelledby="works-title" style="padding-top:0">
       <div class="wrap">
-        <div class="works__head">
+        <div class="works__head reveal">
           <h2 class="section__title" id="works-title">Избранные работы</h2>
           <a class="btn btn--primary btn--lg" href="https://t.me/jevj1k_pf" target="_blank" rel="noopener noreferrer">Все работы в Telegram</a>
         </div>
 
-        <div class="works__bar">
+        <div class="works__bar reveal">
           <div class="filters" role="group" aria-label="Фильтр по категории">
             <button class="filter" type="button" data-filter="all" aria-pressed="true">Все</button>
             <button class="filter" type="button" data-filter="Motion Design" aria-pressed="false">Motion Design</button>
@@ -681,7 +906,7 @@
         </div>
       </div>
 
-      <div class="carousel">
+      <div class="carousel reveal">
         <!--
           КАК ДОБАВИТЬ РАБОТУ: скопируй любой <li class="work"> и поменяй data-атрибуты, пути к файлам и тексты.
           Файлы лежат в папке media: poster/ (кадр-превью), preview/ (короткий беззвучный loop для наведения),
@@ -819,7 +1044,7 @@
       </div>
 
       <div class="wrap">
-        <p class="works__note">Видео сжаты для сайта. Полные версии и другие работы — в Telegram-портфолио.</p>
+        <p class="works__note reveal">Видео сжаты для сайта. Полные версии и другие работы — в Telegram-портфолио.</p>
       </div>
 
       <dialog class="player" id="player" aria-labelledby="player-title">
@@ -836,12 +1061,12 @@
 
     <!-- ===================== ПОДХОД ===================== -->
     <section class="section approach" id="approach" aria-labelledby="approach-title">
-      <div class="wrap approach__grid">
-        <div class="approach__head">
+      <div class="wrap approach__grid reveal-group">
+        <div class="approach__head reveal">
           <h2 class="section__title" id="approach-title">Почему стоит посмотреть мои работы</h2>
           <p class="approach__motto">Каждый кадр имеет значение.</p>
         </div>
-        <ul class="approach__list">
+        <ul class="approach__list reveal">
           <li>
             <h3 class="approach__item-title">Внимание к деталям</h3>
             <p class="approach__item-text">Аккуратная работа с переходами, ритмом и синхронизацией.</p>
@@ -865,13 +1090,13 @@
     <!-- ===================== КОНТАКТЫ ===================== -->
     <section class="section" id="contacts" aria-labelledby="contacts-title">
       <div class="wrap">
-        <h2 class="contacts__title" id="contacts-title">Есть идея? Давай обсудим</h2>
-        <p class="contacts__lead">Расскажи о своей задумке — вместе подумаем, как превратить её в интересное видео.</p>
-        <div class="contacts__cta">
+        <h2 class="contacts__title reveal" id="contacts-title">Есть идея? Давай обсудим</h2>
+        <p class="contacts__lead reveal">Расскажи о своей задумке — вместе подумаем, как превратить её в интересное видео.</p>
+        <div class="contacts__cta reveal">
           <a class="btn btn--primary btn--lg" href="https://t.me/Jevj1k" target="_blank" rel="noopener noreferrer">Написать в Telegram</a>
         </div>
 
-        <div class="contacts__grid">
+        <div class="contacts__grid reveal">
           <div class="contacts__info">
             <p>Открыт к новым идеям и интересным проектам. Напиши мне в Telegram или VK — обсудим детали.</p>
 
@@ -942,7 +1167,8 @@
       });
 
       // ---- Карусель работ ----
-      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var canHover = window.matchMedia && window.matchMedia('(hover: hover)').matches;
       var track = document.getElementById('works-track');
       var prev = document.getElementById('works-prev');
       var next = document.getElementById('works-next');
@@ -1033,6 +1259,345 @@
         pVideo.load();
         if (opener) opener.focus();
       });
+
+      // =============================================================
+      // Интерактивный таймлайн: плейхед, клипы, волны, шкала
+      // =============================================================
+      var tl = document.getElementById('timeline');
+      if (tl) {
+        var FPS = 24;                    // кадров в секунду (таймкод ММ:СС:КК)
+        var DURATION = 25;               // секунд в таймлайне (00:00 – 00:25)
+        var TOTAL_FRAMES = FPS * DURATION;
+        var tlBody = document.getElementById('tl-body');
+        var playhead = document.getElementById('tl-playhead');
+        var flag = document.getElementById('tl-flag');
+        var timecodeEl = document.getElementById('tl-timecode');
+        var playBtn = document.getElementById('tl-play');
+        var speedBtn = document.getElementById('tl-speed');
+        var scrub = document.getElementById('tl-scrub');
+        var ruler = document.getElementById('tl-ruler');
+        var hoverLine = document.getElementById('tl-hover-line');
+        var hoverTime = document.getElementById('tl-hover-time');
+        var tooltip = document.getElementById('tl-tooltip');
+        var clips = Array.prototype.slice.call(tl.querySelectorAll('.clip'));
+        var audioClips = clips.filter(function (c) { return c.classList.contains('clip--audio'); });
+        var lanes = Array.prototype.slice.call(tl.querySelectorAll('.tl__lane'));
+
+        var state = { playing: false, speed: 1, pos: 0, lastTs: 0, running: false, dragging: false, wasPlaying: false };
+        var selectedClip = null;
+        var clipDrag = null;
+        var autoPlayTimer = null;
+
+        function pad2(n) { return (n < 10 ? '0' : '') + n; }
+        function formatTimecode(frame) {
+          var f = Math.max(0, Math.min(TOTAL_FRAMES - 1, Math.round(frame)));
+          var m = Math.floor(f / (FPS * 60));
+          var s = Math.floor((f % (FPS * 60)) / FPS);
+          return pad2(m) + ':' + pad2(s) + ':' + pad2(f % FPS);
+        }
+
+        // Подготовка клипов: индекс для stagger-анимации, доступность, волны для аудио
+        clips.forEach(function (clip, i) {
+          clip.style.setProperty('--i', i);
+          clip.setAttribute('tabindex', '0');
+          clip.setAttribute('role', 'button');
+          var name = clip.getAttribute('data-name') || 'Клип';
+          var dur = parseFloat(clip.getAttribute('data-dur') || '0');
+          clip.setAttribute('aria-label', 'Клип «' + name + '», длительность ' + dur + ' секунд');
+        });
+
+        audioClips.forEach(function (clip) {
+          var wave = document.createElement('span');
+          wave.className = 'wave';
+          var w = clip.getBoundingClientRect().width;
+          var n = Math.max(6, Math.round(w / 7));
+          for (var i = 0; i < n; i++) {
+            var bar = document.createElement('span');
+            bar.className = 'wave__bar';
+            bar.style.height = (25 + Math.random() * 75) + '%';
+            bar.style.setProperty('--d', (Math.random() * 0.6).toFixed(2) + 's'); // случайная задержка «дыхания»
+            wave.appendChild(bar);
+          }
+          clip.appendChild(wave);
+          var played = document.createElement('span');
+          played.className = 'clip__played';
+          clip.appendChild(played);
+        });
+
+        // Активный клип: тот, над которым сейчас плейхед
+        function updateClips() {
+          var t = state.pos * DURATION;
+          clips.forEach(function (clip) {
+            var start = parseFloat(clip.getAttribute('data-start'));
+            var dur = parseFloat(clip.getAttribute('data-dur'));
+            clip.classList.toggle('is-active', t >= start && t < start + dur);
+          });
+        }
+
+        // «Проигранная» часть аудио-волны ярче
+        function updateAudio() {
+          var t = state.pos * DURATION;
+          audioClips.forEach(function (clip) {
+            var played = clip.querySelector('.clip__played');
+            if (!played) return;
+            var start = parseFloat(clip.getAttribute('data-start'));
+            var dur = parseFloat(clip.getAttribute('data-dur'));
+            var p = Math.max(0, Math.min(1, (t - start) / dur));
+            played.style.width = (p * 100) + '%';
+          });
+        }
+
+        function setPos(p) {
+          state.pos = p;
+          playhead.style.left = (p * 100) + '%';
+          var tc = formatTimecode(p * TOTAL_FRAMES);
+          flag.textContent = tc;
+          timecodeEl.textContent = tc;
+          updateClips();
+          updateAudio();
+        }
+        function seekTo(clientX) {
+          var rect = scrub.getBoundingClientRect();
+          setPos(Math.max(0, Math.min(1, (clientX - rect.left) / rect.width)));
+        }
+
+        // Воспроизведение через requestAnimationFrame (плавно, без setInterval)
+        function updatePlayUI() {
+          playBtn.setAttribute('aria-pressed', String(state.playing));
+          playBtn.setAttribute('aria-label', state.playing ? 'Пауза' : 'Воспроизвести');
+          playBtn.classList.toggle('is-playing', state.playing);
+          tl.classList.toggle('is-playing', state.playing);
+        }
+        function play() {
+          state.playing = true;
+          state.lastTs = 0;
+          updatePlayUI();
+          if (!state.running) { state.running = true; requestAnimationFrame(tick); }
+        }
+        function pause() { state.playing = false; updatePlayUI(); }
+        function tick(ts) {
+          if (state.playing && !state.dragging) {
+            if (state.lastTs) {
+              var dt = (ts - state.lastTs) / 1000;
+              state.pos += dt * state.speed / DURATION;
+              if (state.pos >= 1) state.pos -= 1; // зацикливание
+              setPos(state.pos);
+            }
+            state.lastTs = ts;
+            requestAnimationFrame(tick);
+          } else {
+            state.running = false;
+          }
+        }
+        function cancelAutoPlay() {
+          if (autoPlayTimer) { clearTimeout(autoPlayTimer); autoPlayTimer = null; }
+        }
+
+        playBtn.addEventListener('click', function () {
+          cancelAutoPlay();
+          if (state.playing) pause(); else play();
+        });
+        speedBtn.addEventListener('click', function () {
+          state.speed = state.speed === 1 ? 2 : 1;
+          speedBtn.textContent = state.speed + 'x';
+          speedBtn.setAttribute('aria-label', 'Скорость воспроизведения: ' + state.speed + 'x');
+        });
+
+        // Перемотка: pointerdown по шкале/дорожкам/флагу, перетаскивание — пауза, отпускание — продолжение
+        function beginDrag(e) {
+          cancelAutoPlay();
+          state.dragging = true;
+          state.wasPlaying = state.playing;
+          pause();
+          seekTo(e.clientX);
+          try { e.currentTarget.setPointerCapture(e.pointerId); } catch (err) {}
+        }
+        function onDragMove(e) {
+          if (!state.dragging) return;
+          seekTo(e.clientX);
+        }
+        function endDrag(e) {
+          if (!state.dragging) return;
+          state.dragging = false;
+          try { e.currentTarget.releasePointerCapture(e.pointerId); } catch (err) {}
+          if (state.wasPlaying && !reduce) play();
+        }
+        lanes.concat([ruler, flag]).forEach(function (el) {
+          el.addEventListener('pointerdown', beginDrag);
+          el.addEventListener('pointermove', onDragMove);
+          el.addEventListener('pointerup', endDrag);
+          el.addEventListener('pointercancel', endDrag);
+        });
+
+        // Клипы: выделение, перемотка к началу, перетаскивание (V1/V2), тултип
+        function selectClip(clip) {
+          if (selectedClip) selectedClip.classList.remove('is-selected');
+          selectedClip = clip;
+          clip.classList.add('is-selected');
+        }
+        function isDraggable(clip) {
+          var lane = clip.closest('.tl__lane');
+          var name = lane ? lane.getAttribute('data-lane') : '';
+          return name === 'V1' || name === 'V2';
+        }
+        function moveClipTo(clip, newLeftPct) {
+          var lane = clip.closest('.tl__lane');
+          var w = parseFloat(clip.style.getPropertyValue('--w'));
+          var l = Math.max(0, Math.min(100 - w, newLeftPct));
+          // запрет наложения на соседние клипы
+          var ok = true;
+          lane.querySelectorAll('.clip').forEach(function (s) {
+            if (s === clip) return;
+            var sl = parseFloat(s.style.getPropertyValue('--l'));
+            var sw = parseFloat(s.style.getPropertyValue('--w'));
+            if (l < sl + sw && sl < l + w) ok = false;
+          });
+          if (!ok) return;
+          clip.style.setProperty('--l', l + '%');
+          clip.setAttribute('data-start', String(Math.round(l / 100 * DURATION * 100) / 100));
+        }
+        function showTooltip(clip) {
+          var name = clip.getAttribute('data-name') || 'Клип';
+          var dur = parseFloat(clip.getAttribute('data-dur') || '0');
+          var durText = (dur % 1 === 0) ? String(dur) : dur.toFixed(1);
+          tooltip.textContent = name + ' · ' + durText + 'с';
+          var bodyRect = tlBody.getBoundingClientRect();
+          var clipRect = clip.getBoundingClientRect();
+          var cx = clipRect.left - bodyRect.left + clipRect.width / 2;
+          var top = clipRect.top - bodyRect.top - 10;
+          tooltip.classList.remove('is-below');
+          if (top < 0) { // на верхней дорожке тултип показываем снизу
+            top = clipRect.bottom - bodyRect.top + 10;
+            tooltip.classList.add('is-below');
+          }
+          tooltip.style.left = cx + 'px';
+          tooltip.style.top = top + 'px';
+          tooltip.classList.add('is-on');
+        }
+        function hideTooltip() { tooltip.classList.remove('is-on'); }
+
+        clips.forEach(function (clip) {
+          clip.addEventListener('pointerdown', function (e) {
+            e.stopPropagation();
+            cancelAutoPlay();
+            state.wasPlaying = state.playing;
+            pause();
+            selectClip(clip);
+            setPos(parseFloat(clip.getAttribute('data-start')) / DURATION);
+            clipDrag = { clip: clip, startX: e.clientX, startL: parseFloat(clip.style.getPropertyValue('--l')), moved: false };
+            try { clip.setPointerCapture(e.pointerId); } catch (err) {}
+          });
+          clip.addEventListener('pointermove', function (e) {
+            if (!clipDrag || clipDrag.clip !== clip) return;
+            if (!clipDrag.moved && Math.abs(e.clientX - clipDrag.startX) > 6) clipDrag.moved = true;
+            if (clipDrag.moved && isDraggable(clip)) {
+              var pxPerPct = 100 / scrub.getBoundingClientRect().width;
+              moveClipTo(clip, clipDrag.startL + (e.clientX - clipDrag.startX) * pxPerPct);
+            }
+          });
+          clip.addEventListener('pointerup', function (e) {
+            if (!clipDrag || clipDrag.clip !== clip) return;
+            var wasDrag = clipDrag.moved;
+            clipDrag = null;
+            try { clip.releasePointerCapture(e.pointerId); } catch (err) {}
+            if (wasDrag && state.wasPlaying && !reduce) play();
+          });
+          clip.addEventListener('pointercancel', function () { clipDrag = null; });
+          clip.addEventListener('pointerenter', function (e) {
+            if (e.pointerType === 'mouse') showTooltip(clip);
+          });
+          clip.addEventListener('pointerleave', hideTooltip);
+          clip.addEventListener('focus', function () { showTooltip(clip); });
+          clip.addEventListener('blur', hideTooltip);
+          clip.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              selectClip(clip);
+              setPos(parseFloat(clip.getAttribute('data-start')) / DURATION);
+            }
+          });
+        });
+
+        // Шкала: тонкая линия-подсказка и таймкод под курсором
+        ruler.addEventListener('pointermove', function (e) {
+          if (e.pointerType === 'touch') return;
+          var rect = ruler.getBoundingClientRect();
+          var p = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+          hoverLine.style.left = (p * 100) + '%';
+          hoverTime.textContent = formatTimecode(p * TOTAL_FRAMES);
+          hoverTime.style.left = (p * 100) + '%';
+          ruler.classList.add('is-hover');
+        });
+        ruler.addEventListener('pointerleave', function () { ruler.classList.remove('is-hover'); });
+
+        // Клавиатура: стрелки ← → перематывают
+        tlBody.addEventListener('keydown', function (e) {
+          if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+            e.preventDefault();
+            var step = (e.key === 'ArrowRight' ? 1 : -1) / TOTAL_FRAMES;
+            setPos(Math.max(0, Math.min(1, state.pos + step)));
+          }
+        });
+
+        // Появление при загрузке: IntersectionObserver → stagger клипов → плейхед стартует
+        setPos(0);
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              tl.classList.add('is-in');
+              io.disconnect();
+              if (!reduce) {
+                autoPlayTimer = setTimeout(function () {
+                  autoPlayTimer = null;
+                  play();
+                }, 350 + (clips.length - 1) * 60 + 250);
+              }
+            }
+          });
+        }, { threshold: 0.25 });
+        io.observe(tl);
+      }
+
+      // =============================================================
+      // Лёгкий наклон карточек работ за курсором (tilt)
+      // =============================================================
+      if (!reduce && canHover) {
+        cards.forEach(function (card) {
+          card.addEventListener('pointermove', function (e) {
+            if (e.buttons) return; // не перебиваем :active
+            var r = card.getBoundingClientRect();
+            var x = (e.clientX - r.left) / r.width - .5;
+            var y = (e.clientY - r.top) / r.height - .5;
+            card.style.transform = 'perspective(800px) rotateY(' + (x * 5).toFixed(2) + 'deg) rotateX(' + (-y * 5).toFixed(2) + 'deg) translateY(-4px)';
+          });
+          card.addEventListener('pointerleave', function () { card.style.transform = ''; });
+        });
+      }
+
+      // =============================================================
+      // Плавное появление разделов при скролле (reveal)
+      // =============================================================
+      var revealEls = document.querySelectorAll('.reveal');
+      // Для групп (например, сетка услуг): каскадная задержка через --i
+      document.querySelectorAll('.reveal-group').forEach(function (group) {
+        group.querySelectorAll(':scope > .reveal').forEach(function (item, i) {
+          item.style.setProperty('--i', String(Math.min(i, 8)));
+        });
+      });
+      if ('IntersectionObserver' in window) {
+        var revealIO = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-in');
+              revealIO.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+        revealEls.forEach(function (el) { revealIO.observe(el); });
+      } else {
+        // Старые браузеры: показываем всё сразу
+        revealEls.forEach(function (el) { el.classList.add('is-in'); });
+      }
 
       updateCarousel();
     })();
